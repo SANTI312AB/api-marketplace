@@ -104,10 +104,10 @@ password: abc1234
 ## Nota: 
 - Asegurarse de que los trigers y enventos estan en la base de dato para un correcto funcionamiento, si no ejecutarlos. Se encuentra en la carpeta:  /script
 
-🌐 Servidor Web
+⚡ Arranque y Ejecución
 
-Este proyecto está optimizado para correr bajo un servidor web convencional (Apache/Nginx).
+A diferencia de otros entornos de desarrollo, esta API corre directamente sobre el servidor web configurado:
 
-Arranque Automático: No es necesario ejecutar php -S o symfony server:start manualmente.
+Sin comandos de inicio: No requiere ejecutar comandos de servidor manuales (bin/console o symfony serve).
 
-Configuración: Al utilizar un entorno como WampServer o una configuración de VirtualHost, la API se mantiene activa mientras el servicio del servidor web esté iniciado.
+Disponibilidad: La API está lista para recibir peticiones tan pronto como el servicio de Docker o el servidor local esté activo.
