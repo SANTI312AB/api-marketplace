@@ -1,0 +1,54 @@
+monolog:
+    channels: ['deprecation']
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!deprecation']
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ['!event', '!doctrine']
+
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                 type: "null"
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405, 200]
+                buffer_size: 20
+            nested:
+                type: stream
+                path: '%kernel.logs_dir%/test.log'
+                level: error
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405, 200]
+                buffer_size: 20 # Evita fugas de memoria
+            nested:
+                type: stream
+                path: php://stderr
+                level: debug
+                formatter: monolog.formatter.json
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine"]
+
+

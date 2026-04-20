@@ -1,0 +1,58 @@
+# config/packages/nelmio_security.yaml
+nelmio_security:
+    # firma/verifica todas las cookies
+    signed_cookie:
+        hash_algo: sha256
+        names: ['*'] # Cuidado: El inicio de sesión no funcionará si todas las cookies están firmadas. Mejor usar ['nombre_cookie1', 'nombre_cookie2']
+        
+    # previene el uso de frames en todo el sitio
+    clickjacking:
+        paths:
+            '^/.*': DENY
+        hosts:
+            - '^foo\.com$'
+            - '\.example\.org$'
+
+    # previene scripts inline, eval inseguro, scripts/imágenes/estilos/frames externos, etc.
+    csp:
+        hosts: []
+        content_types: []
+        enforce:
+            level1_fallback: false
+            browser_adaptive:
+                enabled: false
+            report-uri: '%router.request_context.base_url%/nelmio/csp/report'
+            #default-src:
+                #- 'none'
+            #script-src:
+                #- 'self'
+            block-all-mixed-content: true # por defecto es false, bloquea contenido HTTP sobre transporte HTTPS
+            #upgrade-insecure-requests: true # por defecto es false, actualiza solicitudes HTTP a transporte HTTPS
+
+    # deshabilita la detección de tipo de contenido para recursos de script
+    content_type:
+        nosniff: true
+
+    # Envía una URL completa en la cabecera ``Referer`` al hacer una solicitud de mismo origen,
+    # solo envía el origen del documento a un destino seguro (HTTPS->HTTPS),
+    # y no envía ninguna cabecera a un destino menos seguro (HTTPS->HTTP).
+    # Si ``strict-origin-when-cross-origin`` no es compatible, usa la política ``no-referrer``,
+    # no se envía información de referencia con las solicitudes.
+    referrer_policy:
+        enabled: true
+        policies:
+            - 'no-referrer'
+            - 'strict-origin-when-cross-origin'
+
+    # fuerza el manejo de HTTPS, no combinar con modo flexible
+    # y asegúrate de tener SSL funcionando en tu sitio antes de habilitar esto
+#    forced_ssl:
+#        hsts_max_age: 2592000 # 30 días
+#        hsts_subdomains: true
+#        redirect_status_code: 302 # por defecto, cambia a 301 para redirecciones permanentes
+
+    # manejo flexible de HTTPS, lee la información detallada de configuración
+    # y asegúrate de tener SSL funcionando en tu sitio antes de habilitar esto
+    flexible_ssl:
+        cookie_name: auth
+        unsecured_logout: false

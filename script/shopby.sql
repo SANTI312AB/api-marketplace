@@ -1,0 +1,3853 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.3
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1:3306
+-- Tiempo de generación: 20-04-2026 a las 02:23:58
+-- Versión del servidor: 8.4.7
+-- Versión de PHP: 8.5.5
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `shopby`
+--
+CREATE DATABASE IF NOT EXISTS `shopby` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `shopby`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin_logs`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_logs` (
+  `ID_LOG_ADMIN` int NOT NULL AUTO_INCREMENT,
+  `ID_ADMIN_USER` int DEFAULT NULL,
+  `FECHA_LOG` datetime NOT NULL,
+  `IP_ADDRESS_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `METHOD_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `TOKEN_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `RESPONSE_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `RESPONSE_CODE` int DEFAULT NULL,
+  `TABLE_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `TABLE_ID_LOG` int DEFAULT NULL,
+  `URL_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_LOG_ADMIN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin_modulo`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_modulo` (
+  `ID_ADMIN_MODULO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_MODULO` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DESCRIPCION_ADMIN_MODULO` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_ADMIN_MODULO`),
+  UNIQUE KEY `admin_modulo_NOMBRE_MODULO_key` (`NOMBRE_MODULO`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `admin_modulo`
+--
+
+INSERT INTO `admin_modulo` (`ID_ADMIN_MODULO`, `NOMBRE_MODULO`, `DESCRIPCION_ADMIN_MODULO`) VALUES
+(28, 'Categorías', NULL),
+(29, 'Transferencias', NULL),
+(30, 'Pedidos', NULL),
+(31, 'Usuarios', NULL),
+(32, 'Marcas', NULL),
+(33, 'Cupones', NULL),
+(34, 'Atributos', NULL),
+(35, 'Transacciones', NULL),
+(36, 'Pagos', NULL),
+(37, 'Métodos de pago', NULL),
+(38, 'Métodos de envío', NULL),
+(39, 'Personalización', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin_roles`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_roles` (
+  `ID_ADMIN_ROLES` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_ADMIN_ROLES` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DESCRIPTION_ADMIN_ROLES` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_ADMIN_ROLES`),
+  UNIQUE KEY `admin_roles_NOMBRE_ADMIN_ROLES_key` (`NOMBRE_ADMIN_ROLES`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `admin_roles`
+--
+
+INSERT INTO `admin_roles` (`ID_ADMIN_ROLES`, `NOMBRE_ADMIN_ROLES`, `DESCRIPTION_ADMIN_ROLES`) VALUES
+(11, 'SUPERADMIN', NULL),
+(12, 'Desarrollo', ''),
+(13, 'Marketing', ''),
+(14, 'Administración', ''),
+(15, 'Soporte', ''),
+(16, 'Marketing + pedidos', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin_roles_modulo`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_roles_modulo` (
+  `ID_ADMIN_ROLE` int NOT NULL,
+  `ID_ADMIN_MODULO` int NOT NULL,
+  PRIMARY KEY (`ID_ADMIN_ROLE`,`ID_ADMIN_MODULO`),
+  KEY `admin_perfil_modulo_ID_ADMIN_MODULO_fkey` (`ID_ADMIN_MODULO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `admin_roles_modulo`
+--
+
+INSERT INTO `admin_roles_modulo` (`ID_ADMIN_ROLE`, `ID_ADMIN_MODULO`) VALUES
+(12, 28),
+(13, 28),
+(16, 28),
+(12, 29),
+(14, 29),
+(12, 30),
+(13, 30),
+(14, 30),
+(15, 30),
+(16, 30),
+(12, 31),
+(13, 31),
+(14, 31),
+(15, 31),
+(16, 31),
+(12, 32),
+(13, 32),
+(16, 32),
+(12, 33),
+(13, 33),
+(15, 33),
+(16, 33),
+(12, 34),
+(13, 34),
+(16, 34),
+(14, 35),
+(16, 35),
+(14, 36),
+(16, 36),
+(12, 37),
+(12, 38),
+(12, 39),
+(13, 39),
+(16, 39);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admin_user`
+--
+
+CREATE TABLE IF NOT EXISTS `admin_user` (
+  `APELLIDOS_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CARGO_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EMAILVERIFIED_USER` datetime(3) DEFAULT NULL,
+  `EMAIL_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NOMBRES_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PASSWORD_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ID_ROL` int NOT NULL,
+  `ID_ADMIN_USER` int NOT NULL AUTO_INCREMENT,
+  `ID_PERFIL_USER` int DEFAULT NULL,
+  `PHONE_NUMBER_USER` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_ADMIN_USER`),
+  UNIQUE KEY `User_EMAIL_USER_key` (`EMAIL_USER`),
+  UNIQUE KEY `admin_user_PHONE_NUMBER_USER_key` (`PHONE_NUMBER_USER`),
+  KEY `admin_user_ID_ROL_fkey` (`ID_ROL`),
+  KEY `admin_user_ID_PERFIL_USER_fkey` (`ID_PERFIL_USER`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `atributos`
+--
+
+CREATE TABLE IF NOT EXISTS `atributos` (
+  `IDATRIBUTO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_ATRIBUTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_CREACION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `FECHA_EDICION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (`IDATRIBUTO`),
+  UNIQUE KEY `UNIQ_1685625271F3F95B` (`NOMBRE_ATRIBUTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `atributos`
+--
+
+INSERT INTO `atributos` (`IDATRIBUTO`, `NOMBRE_ATRIBUTO`, `FECHA_CREACION`, `FECHA_EDICION`) VALUES
+(1, 'Color', NULL, NULL),
+(2, 'Tamaño', NULL, NULL),
+(3, 'Memoria', NULL, NULL),
+(5, 'Unidades', NULL, NULL),
+(6, 'Talla', NULL, NULL),
+(7, 'Capacidad', NULL, NULL),
+(29, 'Largo (Mts)', NULL, NULL),
+(30, 'Modelo', NULL, NULL),
+(32, 'Talla (Americano)', NULL, NULL),
+(33, 'Talla (Mercosur)', NULL, NULL),
+(34, 'Género', NULL, NULL),
+(35, 'Talla (Años)', NULL, NULL),
+(36, 'Talla (Meses)', NULL, NULL),
+(38, 'Talla Ropa', NULL, NULL),
+(39, 'Medida', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `banco`
+--
+
+CREATE TABLE IF NOT EXISTS `banco` (
+  `IDBANCO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_CUENTA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NUMERO_CUENTA` bigint NOT NULL,
+  `TIPO_CUENTA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `BANCO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  PRIMARY KEY (`IDBANCO`),
+  KEY `IDX_77DEE1D143485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `bloques_promocionales`
+--
+
+CREATE TABLE IF NOT EXISTS `bloques_promocionales` (
+  `IDBLOQUE_PROMOCIONAL` int NOT NULL AUTO_INCREMENT,
+  `HREF_BLOQUE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ORDER_BLOQUE` int NOT NULL,
+  `VISIBLE` tinyint(1) DEFAULT NULL,
+  `RANDOM_BLOQUE` tinyint(1) DEFAULT NULL,
+  `TITLE_BLOQUE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ORIENTATION_BLOQUE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FEATURED_BLOCK_PRODUCT_ID` int DEFAULT NULL,
+  `IDCATEGORIA` int DEFAULT NULL,
+  PRIMARY KEY (`IDBLOQUE_PROMOCIONAL`),
+  KEY `IDX_1B1FF58DBD082930` (`IDCATEGORIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `bloques_promocionales`
+--
+
+INSERT INTO `bloques_promocionales` (`IDBLOQUE_PROMOCIONAL`, `HREF_BLOQUE`, `ORDER_BLOQUE`, `VISIBLE`, `RANDOM_BLOQUE`, `TITLE_BLOQUE`, `ORIENTATION_BLOQUE`, `FEATURED_BLOCK_PRODUCT_ID`, `IDCATEGORIA`) VALUES
+(5, 'https://shopby.com.ec/categoria/moda', 2, 1, 0, 'Moda', 'LTR', 60, 4),
+(6, 'https://shopby.com.ec/producto/camiseta-princesa-bella-67460581f28f8?variant=895&combinations=895', 3, 1, 0, 'Promocionados', 'LTR', NULL, NULL),
+(7, 'https://shopby.com.ec/listado/mas-vendidos', 1, 1, 0, 'Más vendidos', 'LTR', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `bloque_producto`
+--
+
+CREATE TABLE IF NOT EXISTS `bloque_producto` (
+  `IDPRODUCTO` int NOT NULL,
+  `IDBLOQUE_PROMOCIONAL` int NOT NULL,
+  PRIMARY KEY (`IDBLOQUE_PROMOCIONAL`,`IDPRODUCTO`),
+  KEY `IDX_DAE64D3F6F15327` (`IDPRODUCTO`),
+  KEY `IDX_DAE64D3FFC1E8143` (`IDBLOQUE_PROMOCIONAL`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `carrito`
+--
+
+CREATE TABLE IF NOT EXISTS `carrito` (
+  `IDCARRITO` int NOT NULL AUTO_INCREMENT,
+  `IDLOGIN` int NOT NULL,
+  `FECHA` datetime DEFAULT NULL,
+  `CARRITO_CONTADOR` int DEFAULT NULL,
+  PRIMARY KEY (`IDCARRITO`),
+  KEY `IDX_77E6BED543485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=1105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categorias`
+--
+
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `IDCATEGORIA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_CATEGORIA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CATEGORIA_SLUG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CATEGORIA_BANNER` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CATEGORIA_IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CATEGORIA_IMG_SLIDER` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CATEGORIA_TITULO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_CREACION` datetime DEFAULT NULL,
+  `FECHA_EDICION` datetime DEFAULT NULL,
+  `DESTACADO` tinyint(1) DEFAULT NULL,
+  `PUBLICADO` tinyint(1) DEFAULT NULL,
+  `DESCRIPCION_CATEGORIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDCATEGORIA`),
+  UNIQUE KEY `UNIQ_5E9F836C5ECC0B1A` (`CATEGORIA_SLUG`),
+  UNIQUE KEY `UNIQ_5E9F836C843DE439` (`NOMBRE_CATEGORIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `categorias`
+--
+
+INSERT INTO `categorias` (`IDCATEGORIA`, `NOMBRE_CATEGORIA`, `CATEGORIA_SLUG`, `CATEGORIA_BANNER`, `CATEGORIA_IMAGEN`, `CATEGORIA_IMG_SLIDER`, `CATEGORIA_TITULO`, `FECHA_CREACION`, `FECHA_EDICION`, `DESTACADO`, `PUBLICADO`, `DESCRIPCION_CATEGORIA`) VALUES
+(1, 'Tecnología', 'tecnología', 'tecnologia-656e44efa0735.webp', '', 'tecnologia-657082f6795cb.png', 'tecnologia', NULL, '2025-05-22 17:03:37', 1, 1, NULL),
+(3, 'Cuidado personal', 'cuidado-personal', 'cuidado-personal-656e451019801.webp', '', 'cuidado-personal-65708308d0327.png', NULL, NULL, '2025-07-02 22:10:56', 1, 1, 'Lo mejor para tu piel en Shopby'),
+(4, 'Moda', 'moda', 'moda-656e4521a8639.webp', '', 'moda-657083194f6fb.png', NULL, NULL, '2024-05-02 15:45:40', 1, 1, NULL),
+(5, 'Infantil', 'infantil', 'bebes-656e4534d729b.webp', '', 'bebes-6570832691763.png', NULL, NULL, NULL, 1, 1, NULL),
+(6, 'Supermercado', 'supermercado', 'supermercado-65e8d1f2d538c.jpg', '', 'supermercado_3rwe03.png', NULL, NULL, NULL, 1, 1, NULL),
+(8, 'Deportes', 'deportes', 'deportes-656e455ae6cab.webp', '', 'deportes-65708358e0366.png', NULL, NULL, NULL, 1, 1, NULL),
+(9, 'Mascotas', 'mascotas', 'mascotas-656e456c0c88e.webp', '', 'mascotas-6741008ad63cd.png', NULL, NULL, NULL, 1, 1, NULL),
+(10, 'Videojuegos', 'videojuegos', 'videojuegos-656e457977b5f.webp', '', 'videojuegos-657083916d26e.webp', NULL, NULL, NULL, 1, 1, NULL),
+(11, 'Juguetes y juegos', 'juguetes-y-juegos', 'jugetes-y-juegos-656e458c5c2d3.webp', '', 'jugetes-y-juegos-6570839ebc4c7.png', NULL, NULL, NULL, 1, 1, NULL),
+(12, 'Industrial', 'industrial', 'industrial-656e459b387be.webp', '', 'industrial-657083b29bfe8.png', NULL, NULL, '2024-05-02 15:44:59', 1, 1, NULL),
+(18, 'Hogar', 'hogar', 'hogar-65e8cf8a82749.webp', '', 'hogar-65e8cf8a8373c.png', NULL, NULL, NULL, 1, 1, NULL),
+(36, 'Seguridad', 'seguridad', 'seguridad-674dd02fb82a0.jpg', NULL, 'seguridad-674dd08a112fc.png', NULL, '2024-08-27 16:45:35', '2024-08-27 16:45:35', 1, 1, NULL),
+(37, 'Vehículos', 'vehículos', 'vehículos-66ce506178538.jpg', NULL, 'vehículos-66ce50c99ce35.png', NULL, '2024-08-27 22:16:50', '2024-08-27 22:16:50', 1, 1, NULL),
+(40, 'Coaching', 'coaching', 'coaching-679d4b9f0f73c.jpg', NULL, 'coaching-679d4bf3291e4.png', NULL, '2025-01-31 22:08:56', '2025-01-31 22:08:56', 1, 1, NULL),
+(41, 'Masculino ', 'masculino-', NULL, NULL, NULL, NULL, '2025-03-10 14:58:00', '2025-03-10 14:58:00', 1, 0, NULL),
+(64, 'Servicios', 'servicios', 'servicios-68630787cf406.png', NULL, 'servicios-6859662c859f6.png', 'servicio', NULL, NULL, 1, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categorias_marcas`
+--
+
+CREATE TABLE IF NOT EXISTS `categorias_marcas` (
+  `IDMARCA` int NOT NULL,
+  `IDCATEGORIA` int NOT NULL,
+  PRIMARY KEY (`IDMARCA`,`IDCATEGORIA`),
+  KEY `IDX_CA32EBE0EE4A9310` (`IDMARCA`),
+  KEY `IDX_CA32EBE0BD082930` (`IDCATEGORIA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `categorias_marcas`
+--
+
+INSERT INTO `categorias_marcas` (`IDMARCA`, `IDCATEGORIA`) VALUES
+(1, 10),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 6),
+(6, 8),
+(6, 9),
+(6, 10),
+(6, 11),
+(6, 12),
+(6, 18),
+(6, 36),
+(6, 37),
+(6, 40),
+(8, 4),
+(9, 8),
+(9, 18),
+(10, 3),
+(11, 1),
+(11, 10),
+(12, 1),
+(13, 1),
+(14, 18),
+(15, 1),
+(15, 12),
+(15, 18),
+(16, 1),
+(17, 1),
+(18, 1),
+(18, 18),
+(19, 1),
+(20, 1),
+(20, 10),
+(21, 1),
+(22, 1),
+(23, 1),
+(24, 1),
+(25, 1),
+(25, 18),
+(26, 1),
+(27, 1),
+(28, 1),
+(29, 1),
+(30, 1),
+(31, 18),
+(32, 1),
+(33, 1),
+(34, 1),
+(34, 18),
+(35, 1),
+(36, 1),
+(36, 18),
+(37, 18),
+(38, 8),
+(39, 1),
+(40, 1),
+(41, 1),
+(42, 4),
+(42, 8),
+(42, 18),
+(43, 1),
+(46, 1),
+(47, 1),
+(48, 1),
+(49, 1),
+(50, 1),
+(51, 1),
+(52, 18),
+(53, 1),
+(54, 1),
+(55, 1),
+(56, 1),
+(57, 1),
+(57, 10),
+(58, 1),
+(59, 1),
+(60, 1),
+(61, 1),
+(61, 10),
+(62, 1),
+(63, 1),
+(63, 10),
+(64, 1),
+(65, 1),
+(65, 10),
+(66, 18),
+(67, 1),
+(67, 18),
+(68, 18),
+(69, 1),
+(70, 1),
+(71, 1),
+(72, 1),
+(73, 1),
+(74, 1),
+(75, 18),
+(76, 1),
+(77, 1),
+(77, 10),
+(78, 1),
+(79, 1),
+(79, 10),
+(80, 18),
+(81, 1),
+(82, 1),
+(82, 18),
+(83, 1),
+(83, 10),
+(84, 1),
+(84, 18),
+(85, 18),
+(86, 1),
+(86, 10),
+(87, 1),
+(88, 1),
+(89, 1),
+(90, 1),
+(91, 1),
+(92, 1),
+(93, 18),
+(94, 1),
+(95, 1),
+(95, 18),
+(96, 18),
+(97, 1),
+(98, 1),
+(98, 10),
+(99, 18),
+(100, 1),
+(101, 1),
+(101, 18),
+(104, 1),
+(105, 1),
+(106, 1),
+(107, 1),
+(113, 18),
+(115, 1),
+(119, 8),
+(120, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categorias_tienda`
+--
+
+CREATE TABLE IF NOT EXISTS `categorias_tienda` (
+  `IDCATEGORIA_TIENDA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_CATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `BANNER_CATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SLUG_CATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `CATEGORIA_TIENDA_IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDTIENDA` int NOT NULL,
+  `FECHA_CREACION` datetime DEFAULT NULL,
+  `FECHA_EDICION` datetime DEFAULT NULL,
+  PRIMARY KEY (`IDCATEGORIA_TIENDA`),
+  UNIQUE KEY `UNIQ_95438A0A415966A2` (`SLUG_CATEGORIA_TIENDA`),
+  KEY `IDX_95438A0A6248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ciudades`
+--
+
+CREATE TABLE IF NOT EXISTS `ciudades` (
+  `IDCIUDAD` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_CIUDAD` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IDPROVINCIA` int DEFAULT NULL,
+  `ID_SERVIENTREGA` int DEFAULT NULL,
+  `FREE_CITY` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`IDCIUDAD`),
+  KEY `IDX_FF770062082C90E` (`IDPROVINCIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=557 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `ciudades`
+--
+
+INSERT INTO `ciudades` (`IDCIUDAD`, `NOMBRE_CIUDAD`, `IDPROVINCIA`, `ID_SERVIENTREGA`, `FREE_CITY`) VALUES
+(1, 'GUAYAQUIL (GUAYAS)', 5, 1, 0),
+(2, 'QUITO (PICHINCHA)', 1, 2, 0),
+(3, 'PORTOVIEJO (MANABI)', 7, 3, 0),
+(4, 'CUENCA (AZUAY)', 4, 4, 0),
+(5, 'SALINAS (SANTA ELENA) (SANTA ELENA)', 20, 5, 0),
+(6, 'MILAGRO (GUAYAS)', 5, 6, 0),
+(7, 'MACHALA (EL ORO)', 12, 7, 0),
+(8, 'BABAHOYO (LOS RIOS)', 15, 8, 0),
+(9, 'QUEVEDO (LOS RIOS)', 15, 9, 0),
+(10, 'ESMERALDAS (ESMERALDAS)', 8, 10, 0),
+(11, 'SANTO DOMINGO (SANTO DOMINGO)', 21, 11, 0),
+(12, 'VENTANAS (LOS RIOS)', 15, 496, 0),
+(13, 'MANTA (MANABI)', 7, 13, 0),
+(14, 'LA LIBERTAD (SANTA ELENA)', 20, 14, 0),
+(15, 'LOJA (LOJA)', 9, 15, 0),
+(16, 'ZAMORA (ZAMORA)', 24, 134, 0),
+(17, 'LAGO AGRIO (SUCUMBIOS)', 18, 17, 0),
+(18, 'LA PUNTILLA (GUAYAS)', 5, 18, 0),
+(19, 'GUALACEO (AZUAY)', 4, 19, 0),
+(20, 'NARANJAL (GUAYAS)', 5, 20, 0),
+(21, 'PLAYAS (GUAYAS)', 5, 21, 0),
+(22, 'PUYO (PASTAZA)', 19, 22, 0),
+(23, 'ATACAMES (ESMERALDAS)', 8, 23, 0),
+(24, 'DURAN (GUAYAS)', 5, 24, 0),
+(25, 'DAULE (GUAYAS)', 5, 25, 0),
+(26, 'EL TRIUNFO (GUAYAS)', 5, 26, 0),
+(27, 'SAN RAFAEL (PICHINCHA)', 1, 27, 0),
+(28, 'SANGOLQUI (PICHINCHA)', 1, 28, 0),
+(29, 'MITAD DEL MUNDO (PICHINCHA)', 1, 29, 0),
+(30, 'BAHIA DE CARAQUEZ (MANABI)', 7, 30, 0),
+(31, 'TUMBACO (PICHINCHA)', 1, 31, 0),
+(32, 'SANTA ROSA (EL ORO) (EL ORO)', 12, 32, 0),
+(33, 'GUALAQUIZA (MORONA SANTIAGO)', 16, 33, 0),
+(34, 'GIRON (AZUAY)', 4, 34, 0),
+(35, 'HUAQUILLAS (EL ORO)', 12, 35, 0),
+(36, 'PASAJE (EL ORO)', 12, 36, 0),
+(37, 'SAN FERNANDO (AZUAY)', 4, 37, 0),
+(38, 'EL COCA (ORELLANA)', 23, 38, 0),
+(39, 'TULCAN (CARCHI)', 3, 39, 0),
+(40, 'IBARRA (IMBABURA)', 2, 40, 0),
+(41, 'LATACUNGA (COTOPAXI)', 6, 41, 0),
+(42, 'AMBATO (TUNGURAHUA)', 22, 42, 0),
+(43, 'RIOBAMBA (CHIMBORAZO)', 11, 43, 0),
+(44, 'GUARANDA (BOLIVAR)', 14, 44, 0),
+(45, 'BALZAR (GUAYAS)', 5, 45, 0),
+(46, 'BUENA FE (LOS RIOS)', 15, 46, 0),
+(47, 'CUMBAYA (PICHINCHA)', 1, 47, 0),
+(48, 'CAYAMBE (PICHINCHA)', 1, 48, 0),
+(49, 'SAN CRISTOBAL (GALAPAGOS)', 13, 49, 0),
+(50, 'PINAS (EL ORO)', 12, 50, 0),
+(51, 'SAN GABRIEL (CARCHI)', 3, 51, 0),
+(52, 'LA TRONCAL (CANAR)', 10, 52, 0),
+(53, 'CALCETA (MANABI)', 7, 53, 0),
+(54, 'ATUNTAQUI (IMBABURA)', 2, 54, 0),
+(55, 'SAN CAMILO (LOS RIOS)', 15, 55, 0),
+(56, 'OTAVALO (IMBABURA)', 2, 56, 0),
+(57, 'VINCES (LOS RIOS)', 15, 702, 0),
+(58, 'EL GUABO (EL ORO)', 12, 58, 0),
+(59, 'SANTA ELENA (SANTA ELENA)', 20, 59, 0),
+(60, 'SAMBORONDON (GUAYAS)', 5, 60, 0),
+(61, 'PEDRO CARBO (GUAYAS)', 5, 61, 0),
+(62, 'MONTANITA (SANTA ELENA)', 20, 62, 0),
+(63, 'BALLENITA (SANTA ELENA)', 20, 63, 0),
+(64, 'SANTA ISABEL (AZUAY)', 4, 64, 0),
+(65, 'ARENILLAS (EL ORO)', 12, 65, 0),
+(66, 'SALCEDO (COTOPAXI)', 6, 66, 0),
+(67, 'ZARUMA (EL ORO)', 12, 774, 0),
+(68, 'BUCAY (GUAYAS)', 5, 68, 0),
+(69, 'LA CONCORDIA (ESMERALDAS)', 8, 69, 0),
+(70, 'PEDERNALES (MANABI)', 7, 70, 0),
+(71, 'QUINSALOMA (LOS RIOS)', 15, 71, 0),
+(72, 'CALUMA (BOLIVAR)', 14, 72, 0),
+(73, 'TOSAGUA (MANABI)', 7, 73, 0),
+(74, 'EL CARMEN (MANABI)', 7, 74, 0),
+(75, 'TENA (NAPO)', 17, 78, 0),
+(76, 'BANOS (TUNGURAHUA)', 22, 79, 0),
+(77, 'CANAR (CANAR)', 10, 81, 0),
+(78, 'MACAS (MORONA SANTIAGO)', 16, 85, 0),
+(79, 'MONTECRISTI (MANABI)', 7, 90, 0),
+(80, 'ALAUSI (CHIMBORAZO)', 11, 91, 0),
+(81, 'CHONE (MANABI)', 7, 95, 0),
+(82, 'QUININDE (ESMERALDAS)', 8, 96, 0),
+(83, 'JIPIJAPA (MANABI)', 7, 97, 0),
+(84, 'AZOGUES (CANAR)', 10, 99, 0),
+(85, 'ABDON CALDERON (MANABI)', 7, 100, 0),
+(86, 'ALPACHACA (IMBABURA)', 2, 101, 0),
+(87, 'ANDRADE MARIN (IMBABURA)', 2, 102, 0),
+(88, 'BACHILLERO (MANABI)', 7, 103, 0),
+(89, 'BANCOS (PICHINCHA)', 1, 104, 0),
+(90, 'BELLAVISTA (MANABI)', 7, 105, 0),
+(91, 'CANUTO (MANABI)', 7, 106, 0),
+(92, 'CARANQUI (IMBABURA)', 2, 107, 0),
+(93, 'CHALTURA (IMBABURA)', 2, 108, 0),
+(94, 'CHILLANES (BOLIVAR)', 14, 110, 0),
+(95, 'GENERAL VERNAZA (GUAYAS)', 5, 111, 0),
+(96, 'GONZANAMA (LOJA)', 9, 112, 0),
+(97, 'LA MERCED (PICHINCHA)', 1, 113, 0),
+(98, 'KM. 26 (GUAYAS)', 5, 114, 0),
+(99, 'LAS NAVES (LOS RIOS)', 15, 115, 0),
+(100, 'LORETO (ORELLANA)', 23, 116, 0),
+(101, 'MACHALILLA (MANABI)', 7, 117, 0),
+(102, 'EL MORRO (GUAYAS)', 5, 118, 0),
+(103, 'MUISNE (ESMERALDAS)', 8, 119, 0),
+(104, 'NANEGAL (PICHINCHA)', 1, 120, 0),
+(105, 'NANEGALITO (PICHINCHA)', 1, 121, 0),
+(106, 'NATABUELA (IMBABURA)', 2, 122, 0),
+(107, 'PIOTER (CARCHI)', 3, 124, 0),
+(108, 'PRIORATO (IMBABURA)', 2, 125, 0),
+(109, 'PUEBLO NUEVO (MANABI) (MANABI)', 7, 126, 0),
+(110, 'QUIROGA (IMBABURA)', 2, 127, 0),
+(111, 'SAN PABLO DE ATENAS (BOLIVAR)', 14, 128, 0),
+(112, 'SAN ROQUE (IMBABURA)', 2, 129, 0),
+(113, 'POMASQUI (PICHINCHA)', 1, 130, 0),
+(114, 'SOZORANGA (LOJA)', 9, 131, 0),
+(115, 'SANTA MARTHA DE CUBA (CARCHI)', 3, 132, 0),
+(116, 'URDANETA (LOS RIOS)', 15, 647, 0),
+(117, 'ZAPOTAL (LOS RIOS) (LOS RIOS)', 15, 437, 0),
+(118, 'ZULEMA (MANABI)', 7, 676, 0),
+(119, 'VALENCIA (LOS RIOS)', 15, 665, 0),
+(120, 'YAGUACHI (GUAYAS)', 5, 583, 0),
+(121, 'CHORDELEG (AZUAY)', 4, 221, 0),
+(122, 'CHONGON (GUAYAS)', 5, 223, 0),
+(123, 'EL EMPALME (LOS RIOS)', 15, 227, 0),
+(124, 'LA MANA (COTOPAXI)', 6, 228, 0),
+(125, 'LA UNION (QUEVEDO) (LOS RIOS)', 15, 229, 0),
+(126, 'MOCACHE (LOS RIOS)', 15, 232, 0),
+(127, 'SAN CARLOS (LOS RIOS) (LOS RIOS)', 15, 233, 0),
+(128, 'PICHINCHA (MANABI)', 7, 234, 0),
+(129, 'LA INDEPENDENCIA (ESMERALDAS)', 8, 236, 0),
+(130, 'CHAMBO (CHIMBORAZO)', 11, 241, 0),
+(131, 'COLTA (CHIMBORAZO)', 11, 242, 0),
+(132, 'GUAMOTE (CHIMBORAZO)', 11, 243, 0),
+(133, 'EL GUANO (CHIMBORAZO)', 11, 244, 0),
+(134, 'PENIPE (CHIMBORAZO)', 11, 246, 0),
+(135, 'SAN LUIS (CHIMBORAZO) (CHIMBORAZO)', 11, 247, 0),
+(136, 'CHUNCHI (CHIMBORAZO)', 11, 248, 0),
+(137, 'SAN ANTONIO DE IBARRA (IMBABURA)', 2, 250, 0),
+(138, 'MIRA (CARCHI)', 3, 251, 0),
+(139, 'PIMAMPIRO (IMBABURA)', 2, 252, 0),
+(140, 'SAN PABLO DEL LAGO (IMBABURA)', 2, 254, 0),
+(141, 'COTACACHI (IMBABURA)', 2, 255, 0),
+(142, 'SAQUISILI (COTOPAXI)', 6, 256, 0),
+(143, 'LASSO (COTOPAXI)', 6, 257, 0),
+(144, 'PUJILI (COTOPAXI)', 6, 258, 0),
+(145, 'PELILEO (TUNGURAHUA)', 22, 259, 0),
+(146, 'PILLARO (TUNGURAHUA)', 22, 260, 0),
+(147, 'PATATE (TUNGURAHUA)', 22, 261, 0),
+(148, 'MOCHA (TUNGURAHUA)', 22, 262, 0),
+(149, 'QUERO (TUNGURAHUA)', 22, 263, 0),
+(150, 'TISALEO (TUNGURAHUA)', 22, 264, 0),
+(151, 'CEVALLOS (TUNGURAHUA)', 22, 265, 0),
+(152, 'SAME (ESMERALDAS)', 8, 266, 0),
+(153, 'SUA (ESMERALDAS)', 8, 267, 0),
+(154, 'TONSUPA (ESMERALDAS)', 8, 268, 0),
+(155, 'TACHINA (ESMERALDAS)', 8, 269, 0),
+(156, 'LA UNION (QUININDE) (ESMERALDAS)', 8, 270, 0),
+(157, 'BOLIVAR (CARCHI)', 3, 271, 0),
+(158, 'CRISTOBAL COLON (CARCHI)', 3, 272, 0),
+(159, 'EL ANGEL (CARCHI)', 3, 273, 0),
+(160, 'HUACA (CARCHI)', 3, 274, 0),
+(161, 'JULIO ANDRADE (CARCHI)', 3, 275, 0),
+(162, 'LA PAZ (CARCHI)', 3, 276, 0),
+(163, 'SAN ISIDRO (CARCHI SAN GA (CARCHI)', 3, 278, 0),
+(164, 'GARCIA MORENO (CARCHI)', 3, 279, 0),
+(165, 'PATRICIA PILAR (LOS RIOS)', 15, 280, 0),
+(166, 'ALLURIQUIN (SANTO DOMINGO)', 21, 282, 0),
+(167, 'TANDAPI (PICHINCHA)', 1, 283, 0),
+(168, 'SAN PEDRO DE GUANUJO (BOLIVAR)', 14, 285, 0),
+(169, 'CHIMBO (BOLIVAR)', 14, 286, 0),
+(170, 'SAN MIGUEL DE BOLIVAR (BOLIVAR)', 14, 287, 0),
+(171, 'SHUSHUFINDI (SUCUMBIOS)', 18, 289, 0),
+(172, 'JOYA DE LOS SACHAS (ORELLANA)', 23, 291, 0),
+(173, 'FATIMA (PASTAZA)', 19, 292, 0),
+(174, 'SANTA CLARA (PASTAZA)', 19, 293, 0),
+(175, 'SHELL (EL PUYO) (PASTAZA)', 19, 295, 0),
+(176, 'MERA (PASTAZA)', 19, 296, 0),
+(177, 'PALORA (MORONA SANTIAGO)', 16, 297, 0),
+(178, 'AROSEMENA TOLA (NAPO)', 17, 298, 0),
+(179, 'TARIFA (GUAYAS)', 5, 301, 0),
+(180, 'LOS TINTOS (GUAYAS)', 5, 304, 0),
+(181, 'SALITRE (GUAYAS)', 5, 305, 0),
+(182, 'LAUREL (GUAYAS)', 5, 311, 0),
+(183, 'SABANILLA (PEDRO CARBO) (GUAYAS)', 5, 312, 0),
+(184, 'SANTA LUCIA (GUAYAS)', 5, 314, 0),
+(185, 'PALESTINA (GUAYAS)', 5, 315, 0),
+(186, 'COLIMES (GUAYAS)', 5, 316, 0),
+(187, 'NOBOL (GUAYAS)', 5, 317, 0),
+(188, 'PETRILLO (GUAYAS)', 5, 318, 0),
+(189, 'LOMAS DE SARGENTILLO (GUAYAS)', 5, 320, 0),
+(190, 'ISIDRO AYORA (GUAYAS)', 5, 321, 0),
+(191, 'CERECITA (GUAYAS)', 5, 323, 0),
+(192, 'SAN ISIDRO (GUAYAS) (GUAYAS)', 5, 325, 0),
+(193, 'PROGRESO (GUAYAS)', 5, 326, 0),
+(194, 'POSORJA (GUAYAS)', 5, 327, 0),
+(195, 'BASE TAURA (GUAYAS)', 5, 331, 0),
+(196, 'PUERTO INCA (GUAYAS)', 5, 332, 0),
+(197, 'BALAO CHICO (GUAYAS)', 5, 333, 0),
+(198, 'PONCE ENRIQUEZ (GUAYAS)', 5, 334, 0),
+(199, 'TENGUEL (GUAYAS)', 5, 336, 0),
+(200, 'BALAO (GUAYAS)', 5, 337, 0),
+(201, 'SANTA ROSA (SANTA ELENA) (SANTA ELENA)', 20, 340, 0),
+(202, 'SAN LORENZO (GUAYAS)', 5, 341, 0),
+(203, 'MUEY (SANTA ELENA)', 20, 342, 0),
+(204, 'ROBERTO ASTUDILLO (GUAYAS)', 5, 343, 0),
+(205, 'MARCELINO MARIDUENA (GUAYAS)', 5, 344, 0),
+(206, 'NARANJITO (GUAYAS)', 5, 345, 0),
+(207, 'MARISCAL SUCRE (GUAYAS)', 5, 346, 0),
+(208, 'MANUEL J CALLE (CANAR)', 10, 349, 0),
+(209, 'EL CAMBIO (EL ORO)', 12, 351, 0),
+(210, 'PUERTO BOLIVAR (EL ORO)', 12, 352, 0),
+(211, 'SANTA ROSA (AMBATO) (TUNGURAHUA)', 22, 354, 0),
+(212, 'LA AVANZADA (EL ORO)', 12, 355, 0),
+(213, 'PORTOVELO (EL ORO)', 12, 358, 0),
+(214, 'BUENA VISTA (EL ORO)', 12, 365, 0),
+(215, 'LA PEANA (EL ORO)', 12, 366, 0),
+(216, 'LOMA DE FRANCO (EL ORO)', 12, 368, 0),
+(217, 'PUERTO HUALTACO (EL ORO)', 12, 371, 0),
+(218, 'BABA (LOS RIOS)', 15, 374, 0),
+(219, 'ISLA DE BEJUCAL (LOS RIOS)', 15, 375, 0),
+(220, 'JUJAN (GUAYAS)', 5, 376, 0),
+(221, 'MONTALVO (LOS RIOS)', 15, 377, 0),
+(222, 'PALENQUE (LOS RIOS)', 15, 378, 0),
+(223, 'MATA DE CACAO (LOS RIOS)', 15, 380, 0),
+(224, 'LA UNION (BABAHOYO) (LOS RIOS)', 15, 381, 0),
+(225, 'ECHEANDIA (BOLIVAR)', 14, 382, 0),
+(226, 'PUEBLO VIEJO (LOS RIOS)', 15, 384, 0),
+(227, 'CATARAMA (LOS RIOS)', 15, 385, 0),
+(228, 'SAN JUAN (LOS RIOS)', 15, 386, 0),
+(229, 'RICAURTE (LOS RIOS)', 15, 387, 0),
+(230, 'SIGSIG (AZUAY)', 4, 391, 0),
+(231, 'BIBLIAN (CANAR)', 10, 392, 0),
+(232, 'SUSCAL (CANAR)', 10, 393, 0),
+(233, 'TAMBO (CANAR)', 10, 394, 0),
+(234, '24 DE MAYO (MANABI)', 7, 396, 0),
+(235, 'CALDERON (MANABI) (MANABI)', 7, 397, 0),
+(236, 'OLMEDO (MANABI) (MANABI)', 7, 398, 0),
+(237, 'COLON (MANABI)', 7, 399, 0),
+(238, 'CRUCITA (MANABI)', 7, 400, 0),
+(239, 'ROCAFUERTE (MANABI)', 7, 401, 0),
+(240, 'SANTA ANA (MANABI) (MANABI)', 7, 402, 0),
+(241, 'JARAMIJO (MANABI)', 7, 409, 0),
+(242, 'LA ESTANCILLA (MANABI)', 7, 412, 0),
+(243, 'FLAVIO ALFARO (MANABI)', 7, 413, 0),
+(244, 'JUNIN (MANABI)', 7, 414, 0),
+(245, 'LEONIDAS PLAZA (MANABI)', 7, 415, 0),
+(246, 'SAN VICENTE (MANABI)', 7, 416, 0),
+(247, 'CHARAPOTO (MANABI)', 7, 417, 0),
+(248, 'SAN JACINTO (MANABI)', 7, 419, 0),
+(249, 'JAMA (MANABI)', 7, 421, 0),
+(250, 'SAN ISIDRO (BAHIA) (MANABI)', 7, 423, 0),
+(251, 'CANOA (MANABI)', 7, 424, 0),
+(252, 'PAJAN (MANABI)', 7, 425, 0),
+(253, 'PUERTO LOPEZ (MANABI)', 7, 426, 0),
+(254, 'CASCOL (MANABI)', 7, 427, 0),
+(255, 'CATAMAYO (LOJA)', 9, 429, 0),
+(256, 'SARAGURO (LOJA)', 9, 430, 0),
+(257, 'VILCABAMBA (LOJA)', 9, 565, 0),
+(258, 'CARIAMANGA (LOJA)', 9, 432, 0),
+(259, 'ALAMOR (LOJA)', 9, 433, 0),
+(260, 'MACARA (LOJA)', 9, 434, 0),
+(261, 'ZAPOTILLO (LOJA)', 9, 67, 0),
+(262, 'YANTZAZA (ZAMORA)', 24, 453, 0),
+(263, 'ALOAG (PICHINCHA)', 1, 441, 0),
+(264, 'AMAGUANA (PICHINCHA)', 1, 442, 0),
+(265, 'CONOCOTO (PICHINCHA)', 1, 444, 0),
+(266, 'GUAYLLABAMBA (PICHINCHA)', 1, 445, 0),
+(267, 'PIFO (PICHINCHA)', 1, 448, 0),
+(268, 'PUEMBO (PICHINCHA)', 1, 449, 0),
+(269, 'QUINCHE (PICHINCHA)', 1, 450, 0),
+(270, 'PEDRO VICENTE MALDONADO (PICHINCHA)', 1, 451, 0),
+(271, 'PUERTO QUITO (PICHINCHA)', 1, 452, 0),
+(272, 'YARUQUI (PICHINCHA)', 1, 680, 0),
+(273, 'TABACUNDO (PICHINCHA)', 1, 454, 0),
+(274, 'MACHACHI (PICHINCHA)', 1, 455, 0),
+(275, 'TAMBILLO (PICHINCHA)', 1, 456, 0),
+(276, 'PINDAL (LOJA)', 9, 459, 0),
+(277, 'PAUTE (AZUAY)', 4, 460, 0),
+(278, 'PUSUQUI (PICHINCHA)', 1, 463, 0),
+(279, 'PALLATANGA (CHIMBORAZO)', 11, 467, 0),
+(280, 'SANTA CRUZ (GALAPAGOS)', 13, 468, 0),
+(281, 'CUMANDA (CHIMBORAZO)', 11, 469, 0),
+(282, 'CATACOCHA (LOJA)', 9, 471, 0),
+(283, 'PUNTA BLANCA (SANTA ELENA)', 20, 474, 0),
+(284, 'PUNTA CENTINELA (SANTA ELENA)', 20, 475, 0),
+(285, 'SAN PABLO (SANTA ELENA) (SANTA ELENA)', 20, 476, 0),
+(286, 'PALMAR (SANTA ELENA)', 20, 477, 0),
+(287, 'VALDIVIA (SANTA ELENA)', 20, 181, 0),
+(288, 'SIMON BOLIVAR (GUAYAS)', 5, 479, 0),
+(289, 'MANGLARALTO (SANTA ELENA)', 20, 480, 0),
+(290, 'SAN PEDRO (SANTA ELENA)', 20, 481, 0),
+(291, 'ANCONCITO (SANTA ELENA)', 20, 482, 0),
+(292, 'ANCON (SANTA ELENA)', 20, 483, 0),
+(293, 'BALSAS (EL ORO)', 12, 486, 0),
+(294, 'MARCABELI (EL ORO)', 12, 488, 0),
+(295, 'BAEZA (NAPO)', 17, 489, 0),
+(296, 'SAN LORENZO (ESMERALDAS)', 8, 490, 0),
+(297, 'EL CHACO (NAPO)', 17, 491, 0),
+(298, 'BORJA (NAPO)', 17, 492, 0),
+(299, 'LIMON INDANZA (MORONA SANTIAGO)', 16, 494, 0),
+(300, 'MENDEZ (MORONA SANTIAGO)', 16, 495, 0),
+(301, 'VICHE (ESMERALDAS)', 8, 431, 0),
+(302, 'EL PAN (AZUAY)', 4, 497, 0),
+(303, 'CUMBE (AZUAY)', 4, 498, 0),
+(304, '1ERO DE MAYO (BOLIVAR)', 14, 499, 0),
+(305, 'SAN JOSE DE CHIMBO (BOLIVAR)', 14, 500, 0),
+(306, 'GUACHAPALA (AZUAY)', 4, 501, 0),
+(307, 'LA PUNTILLA (CANAR)', 10, 502, 0),
+(308, 'LA UNION (AZUAY) (AZUAY)', 4, 503, 0),
+(309, 'SEVILLA DE ORO (AZUAY)', 4, 504, 0),
+(310, 'TARQUI (AZUAY) (AZUAY)', 4, 505, 0),
+(311, 'VOLUNTAD DE DIOS (CANAR)', 10, 731, 0),
+(312, 'BALZAPAMBA (BOLIVAR)', 14, 507, 0),
+(313, 'PISAGUA ALTO (BOLIVAR)', 14, 508, 0),
+(314, 'PISAGUA BAJO (BOLIVAR)', 14, 509, 0),
+(315, 'SAN SIMON (BOLIVAR)', 14, 511, 0),
+(316, 'SANTA FE (BOLIVAR)', 14, 512, 0),
+(317, 'COCHANCAY (CANAR)', 10, 513, 0),
+(318, 'DUCUR (CANAR)', 10, 514, 0),
+(319, 'GUAPAN (CANAR)', 10, 515, 0),
+(320, 'INGAPIRCA (CANAR)', 10, 516, 0),
+(321, 'JAVIER LOYOLA (CANAR)', 10, 517, 0),
+(322, 'LICAN (CHIMBORAZO)', 11, 518, 0),
+(323, 'BELISARIO QUEVEDO (COTOPAXI)', 6, 521, 0),
+(324, 'CHIPUALO (COTOPAXI)', 6, 522, 0),
+(325, 'GUAYTACAMA (COTOPAXI)', 6, 523, 0),
+(326, 'MULALAO (COTOPAXI)', 6, 524, 0),
+(327, 'MULALILLO (COTOPAXI)', 6, 525, 0),
+(328, 'PANZALEO (COTOPAXI)', 6, 526, 0),
+(329, 'PASTOCALLE (COTOPAXI)', 6, 527, 0),
+(330, 'PATAIN (COTOPAXI)', 6, 528, 0),
+(331, 'RUMIPAMBA (COTOPAXI)', 6, 529, 0),
+(332, 'SAN MARCOS (COTOPAXI)', 6, 530, 0),
+(333, 'TANICUCHI (COTOPAXI)', 6, 531, 0),
+(334, 'TOACASO (COTOPAXI)', 6, 532, 0),
+(335, 'YANAYACU (COTOPAXI)', 6, 440, 0),
+(336, '3 CERRITOS (PASAJE) (EL ORO)', 12, 534, 0),
+(337, 'BAJO ALTO (EL ORO)', 12, 535, 0),
+(338, 'BARBONES (EL ORO)', 12, 536, 0),
+(339, 'BELLAMARIA (EL ORO)', 12, 537, 0),
+(340, 'CANA QUEMADA (EL ORO)', 12, 538, 0),
+(341, 'EL PACHE (EL ORO)', 12, 540, 0),
+(342, 'EL PORTON (EL ORO)', 12, 541, 0),
+(343, 'LA IBERIA (EL ORO)', 12, 542, 0),
+(344, 'PUERTO JELI (EL ORO)', 12, 544, 0),
+(345, 'RIO BONITO (EL ORO)', 12, 545, 0),
+(346, 'SAN VICENTE DEL JOBO (EL ORO)', 12, 547, 0),
+(347, 'SHUMIRAL (EL ORO)', 12, 548, 0),
+(348, 'BORBON (ESMERALDAS)', 8, 549, 0),
+(349, 'TONCHIGUE (ESMERALDAS)', 8, 550, 0),
+(350, 'EL NATO (GUAYAS)', 5, 552, 0),
+(351, 'LA MARAVILLA (GUAYAS)', 5, 553, 0),
+(352, 'ENGABAO (GUAYAS)', 5, 554, 0),
+(353, 'LA T DE SALITRE (GUAYAS)', 5, 555, 0),
+(354, 'LA TOMA (GUAYAS)', 5, 556, 0),
+(355, 'LAS ANIMAS (GUAYAS)', 5, 557, 0),
+(356, 'LAS MERCEDES (NARANJAL) (GUAYAS)', 5, 558, 0),
+(357, 'LORENZO DE GARAICOA (GUAYAS)', 5, 559, 0),
+(358, 'MATILDE ESTHER (GUAYAS)', 5, 560, 0),
+(359, 'PUENTE LUCIA (GUAYAS)', 5, 561, 0),
+(360, 'PUERTO DEL ENGABAO (GUAYAS)', 5, 562, 0),
+(361, 'SAN CARLOS (BALAO) (GUAYAS)', 5, 563, 0),
+(362, 'SANTA RITA (BALAO) (GUAYAS)', 5, 564, 0),
+(363, 'VILLA NUEVA (GUAYAS)', 5, 57, 0),
+(364, 'VIRGEN DE FATIMA KM 26 (GUAYAS)', 5, 506, 0),
+(365, '3 POSTES (GUAYAS)', 5, 567, 0),
+(366, 'BOCA DE CANA (GUAYAS)', 5, 568, 0),
+(367, 'BOLICHE (GUAYAS)', 5, 569, 0),
+(368, 'CIEN FAMILIA (GUAYAS)', 5, 571, 0),
+(369, 'COLORADAL (GUAYAS)', 5, 572, 0),
+(370, 'DATA DE PLAYAS (GUAYAS)', 5, 573, 0),
+(371, 'SAN ANTONIO (PLAYAS) (GUAYAS)', 5, 574, 0),
+(372, 'ADUANA (IMBABURA)', 2, 575, 0),
+(373, 'CHORLAVI (IMBABURA)', 2, 576, 0),
+(374, 'EL OLIVO (IMBABURA)', 2, 577, 0),
+(375, 'EL RETORNO (IMBABURA)', 2, 578, 0),
+(376, 'PINSAQUI (IMBABURA)', 2, 579, 0),
+(377, 'PUERTO LAGO (IMBABURA)', 2, 580, 0),
+(378, 'SAN JOSE (IMBABURA)', 2, 581, 0),
+(379, 'SANTO DOMINGO IMBABURA (IMBABURA)', 2, 582, 0),
+(380, 'YAGUARCOCHA (IMBABURA)', 2, 533, 0),
+(381, 'CELICA (LOJA)', 9, 584, 0),
+(382, 'CHAGUARPAMBA (LOJA)', 9, 585, 0),
+(383, 'MALACATOS (LOJA)', 9, 586, 0),
+(384, 'POZUL (LOJA)', 9, 587, 0),
+(385, 'SAN LUCAS (LOJA)', 9, 588, 0),
+(386, 'CARACOL (LOS RIOS)', 15, 589, 0),
+(387, 'ENTRADA DE SAN JUAN (LOS RIOS)', 15, 590, 0),
+(388, 'FUMISA (LOS RIOS)', 15, 591, 0),
+(389, 'HIDROLITORAL (LOS RIOS)', 15, 592, 0),
+(390, 'LA ESPERANZA (LOS RIOS)', 15, 593, 0),
+(391, 'LA JULIA (LOS RIOS)', 15, 594, 0),
+(392, 'LA UNION (VALENCIA) (LOS RIOS)', 15, 595, 0),
+(393, 'NUEVA UNION (LOS RIOS) (LOS RIOS)', 15, 596, 0),
+(394, 'PALMISA (LOS RIOS)', 15, 597, 0),
+(395, 'LOS ANGELES (LOS RIOS)', 15, 598, 0),
+(396, 'RIO CHICO (MANABI)', 7, 599, 0),
+(397, '10 DE AGOSTO (MANABI)', 7, 600, 0),
+(398, 'ARENALES (MANABI)', 7, 601, 0),
+(399, 'ATAHUALPA MANABI (MANABI)', 7, 602, 0),
+(400, 'CANITAS (MANABI)', 7, 606, 0),
+(401, 'CHEVE (MANABI)', 7, 607, 0),
+(402, 'CIUDAD ALFARO (MANABI)', 7, 608, 0),
+(403, 'COAQUE (MANABI)', 7, 609, 0),
+(404, 'COJIMIES (MANABI)', 7, 610, 0),
+(405, 'DON JUAN (MANABI)', 7, 611, 0),
+(406, 'EL MATAL (MANABI)', 7, 612, 0),
+(407, 'EL RODEO (MANABI)', 7, 613, 0),
+(408, 'LODANA (MANABI)', 7, 614, 0),
+(409, 'LOS BAJOS (MANABI)', 7, 615, 0),
+(410, 'NUEVO BRICENO (MANABI)', 7, 617, 0),
+(411, 'SAN CLEMENTE (MANABI)', 7, 618, 0),
+(412, 'SAN PLACIDO (MANABI)', 7, 619, 0),
+(413, 'SANCAN (MANABI)', 7, 620, 0),
+(414, 'SOSOTE (MANABI)', 7, 622, 0),
+(415, 'ARCHIDONA (NAPO)', 17, 624, 0),
+(416, 'GONZALO PIZARRO (NAPO)', 17, 625, 0),
+(417, 'NUEVA ESPERANZA (NAPO)', 17, 626, 0),
+(418, 'PUERTO NAPO (NAPO)', 17, 627, 0),
+(419, 'ALANGASI (PICHINCHA)', 1, 628, 0),
+(420, 'ALOASI (PICHINCHA)', 1, 629, 0),
+(421, 'AYORA (PICHINCHA)', 1, 630, 0),
+(422, 'CALACALI (PICHINCHA)', 1, 631, 0),
+(423, 'CALDERON (PICHINCHA)', 1, 632, 0),
+(424, 'CUSUBAMBA (PICHINCHA)', 1, 633, 0),
+(425, 'GUACHALA (PICHINCHA)', 1, 634, 0),
+(426, 'JUAN MONTALVO (PICHINCHA)', 1, 635, 0),
+(427, 'LA ARMENIA (PICHINCHA)', 1, 636, 0),
+(428, 'LLANO CHICO (PICHINCHA)', 1, 637, 0),
+(429, 'MONJAS (PICHINCHA)', 1, 639, 0),
+(430, 'PINTAG (PICHINCHA)', 1, 641, 0),
+(431, 'SAN ANTONIO DE PICHINCHA (PICHINCHA)', 1, 642, 0),
+(432, 'SAN JOSE DE MORAN (PICHINCHA)', 1, 643, 0),
+(433, 'SAN JUAN DE CALDERON (PICHINCHA)', 1, 644, 0),
+(434, 'SAN MIGUEL DE LOS BANCOS (PICHINCHA)', 1, 645, 0),
+(435, 'TABABELA (PICHINCHA)', 1, 646, 0),
+(436, 'UYUMBICHO (PICHINCHA)', 1, 478, 0),
+(437, 'ZAMBISA (PICHINCHA)', 1, 16, 0),
+(438, 'CADEATE (SANTA ELENA)', 20, 649, 0),
+(439, 'CAPAES (SANTA ELENA)', 20, 650, 0),
+(440, 'EL TAMBO (SANTA ELENA)', 20, 651, 0),
+(441, 'JAMBELI MONTEVERDE (SANTA (SANTA ELENA)', 20, 652, 0),
+(442, 'LIBERTADOR BOLIVAR (SANTA ELENA)', 20, 653, 0),
+(443, 'JAMBELI MONTEVERDE (SANTA ELENA)', 20, 652, 0),
+(444, 'OLON (SANTA ELENA)', 20, 655, 0),
+(445, 'PROSPERIDAD (SANTA ELENA)', 20, 656, 0),
+(446, 'PUNTA BARANDUA (SANTA ELENA)', 20, 657, 0),
+(447, 'PUNTA CARNERO (SANTA ELENA)', 20, 658, 0),
+(448, 'KM 14 QUEVEDO (SANTO DOMINGO)', 21, 659, 0),
+(449, 'KM 24 QUEVEDO (SANTO DOMINGO)', 21, 660, 0),
+(450, 'KM 38.5 VIA QUEVEDO (SANTO DOMINGO)', 21, 661, 0),
+(451, 'KM 41 VIA QUEVEDO (SANTO DOMINGO)', 21, 662, 0),
+(452, 'LUZ DE AMERICA (SANTO DOMINGO)', 21, 663, 0),
+(453, 'NUEVO ISRAEL (SANTO DOMINGO)', 21, 664, 0),
+(454, 'VALLE HERMOSO (SANTO DOMINGO)', 21, 12, 0),
+(455, '7 DE JULIO (SUCUMBIOS)', 18, 666, 0),
+(456, 'CASCALES (SUCUMBIOS)', 18, 667, 0),
+(457, 'JIVINO VERDE (SUCUMBIOS)', 18, 668, 0),
+(458, 'LOS RIOS (SUCUMBIOS) (SUCUMBIOS)', 18, 669, 0),
+(459, 'LUMBAQUI (SUCUMBIOS)', 18, 670, 0),
+(460, 'REVENTADOR (SUCUMBIOS)', 18, 671, 0),
+(461, 'SANTA CECILIA (SUCUMBIOS)', 18, 672, 0),
+(462, 'PALANDA (ZAMORA)', 24, 675, 0),
+(463, 'ZUMBA (ZAMORA)', 24, 676, 0),
+(464, 'SAN ANDRES (CHIMBORAZO)', 11, 677, 0),
+(465, 'CAJABAMBA (CHIMBORAZO)', 11, 678, 0),
+(466, 'DELEG (CANAR)', 10, 679, 0),
+(467, 'YARUQUIES (CHIMBORAZO)', 11, 648, 0),
+(468, 'LOURDES (EL ORO)', 12, 681, 0),
+(469, 'CHIVERIA (GUAYAS)', 5, 682, 0),
+(470, 'SANTIAGO (LOJA)', 9, 683, 0),
+(471, 'COLORADO (MANABI)', 7, 684, 0),
+(472, 'MACHE (MANABI)', 7, 685, 0),
+(473, 'LLANO GRANDE (PICHINCHA)', 7, 686, 0),
+(474, 'MIRAVALLE (PICHINCHA)', 7, 687, 0),
+(475, 'LAS DELICIAS (SANTO DOMINGO)', 21, 688, 0),
+(476, '4 ESQUINAS (BOLIVAR)', 14, 689, 0),
+(477, 'COJITAMBO (CANAR)', 10, 692, 0),
+(478, 'BANOS (AZUAY)', 4, 694, 0),
+(479, 'RICAURTE (AZUAY)', 4, 695, 0),
+(480, 'ASUNCION (BOLIVAR)', 14, 696, 0),
+(481, 'LA MAGDALENA (BOLIVAR)', 14, 697, 0),
+(482, 'RECINTO 24 DE MAYO (BOLIVAR)', 14, 698, 0),
+(483, 'RECINTO EL PALMAR (BOLIVAR)', 14, 699, 0),
+(484, 'RECINTO LA MARITZA (BOLIVAR)', 14, 700, 0),
+(485, 'SALINAS (BOLIVAR) (BOLIVAR)', 14, 701, 0),
+(486, 'VINCHOA (BOLIVAR)', 14, 566, 0),
+(487, 'CHITAN DE NAVARRETES (CARCHI)', 3, 703, 0),
+(488, 'CUESACA (CARCHI)', 3, 704, 0),
+(489, 'SANDIAL (CARCHI)', 3, 705, 0),
+(490, 'EL CORAZON (COTOPAXI)', 6, 706, 0),
+(491, 'PANGUA (COTOPAXI)', 6, 707, 0),
+(492, 'SIGCHOS (COTOPAXI)', 6, 708, 0),
+(493, 'ANCHILIVI (COTOPAXI)', 6, 709, 0),
+(494, 'POALO (COTOPAXI)', 6, 710, 0),
+(495, 'LA VICTORIA (COTOPAXI)', 6, 711, 0),
+(496, 'MORASPUNGO (COTOPAXI)', 6, 712, 0),
+(497, 'SANTA ANA (COTOPAXI) (COTOPAXI)', 6, 713, 0),
+(498, 'LAGARTO (ESMERALDAS)', 8, 714, 0),
+(499, 'RIO VERDE (ESMERALDAS)', 8, 715, 0),
+(500, 'LA Y DE CALDERON (ESMERALDAS)', 8, 716, 0),
+(501, 'LAS PENAS (ESMERALDAS)', 8, 717, 0),
+(502, 'ALFREDO BAQUERIZO MORENO (GUAYAS)', 5, 718, 0),
+(503, 'ELOY ALFARO - DURAN (GUAYAS)', 5, 24, 0),
+(504, 'GENERAL ANTONIO ELIZALDE (GUAYAS)', 5, 720, 0),
+(505, 'SAN JACINTO DE YAGUACHI (GUAYAS)', 5, 722, 0),
+(506, 'URBINA JADO - SALITRE (GUAYAS)', 5, 724, 0),
+(507, 'NUEVA UNION (NARANJAL) (GUAYAS)', 5, 725, 0),
+(508, 'EL DESEO (GUAYAS)', 5, 726, 0),
+(509, 'INGENIO SAN CARLOS (GUAYAS)', 5, 727, 0),
+(510, 'ANTONIO ANTE (IMBABURA)', 2, 728, 0),
+(511, 'URCUQUI (IMBABURA)', 2, 729, 0),
+(512, 'SAN LUIS (IMBABURA) (IMBABURA)', 2, 730, 0),
+(513, 'YACHAY (IMBABURA)', 2, 182, 0),
+(514, 'OLMEDO (LOJA) (LOJA)', 9, 732, 0),
+(515, 'PUEBLO NUEVO (LOS RIOS) (LOS RIOS)', 15, 733, 0),
+(516, 'LA 14 VIA EL PARAISO (LOS RIOS)', 15, 734, 0),
+(517, 'SAN LUIS DE PAMBIL (LOS RIOS)', 15, 735, 0),
+(518, 'SUCRE BAHIA (MANABI)', 7, 736, 0),
+(519, 'RICAURTE (MANABI)', 7, 737, 0),
+(520, 'SAN ANTONIO (MANABI) (MANABI)', 7, 738, 0),
+(521, 'LA CHORRERA (MANABI)', 7, 739, 0),
+(522, 'PLAYA PRIETA (MANABI)', 7, 740, 0),
+(523, 'COTUNDO (NAPO)', 17, 741, 0),
+(524, 'TAZAYACU (NAPO)', 17, 742, 0),
+(525, 'MEJIA (PICHINCHA)', 1, 743, 0),
+(526, 'PUERTO LIMON (SANTO DOMINGO)', 21, 744, 0),
+(527, 'SAN JACINTO DEL BUA (SANTO DOMINGO)', 21, 745, 0),
+(528, 'HUAMBALO (TUNGURAHUA)', 22, 746, 0),
+(529, 'EL PANGUI (ZAMORA)', 24, 747, 0),
+(530, 'AMALUZA (LOJA)', 9, 748, 0),
+(531, 'NAMIREZ (ZAMORA)', 24, 749, 0),
+(532, 'PAQUIZHA (ZAMORA)', 24, 750, 0),
+(533, 'CHAMICO (ZAMORA)', 24, 751, 0),
+(534, 'PIUNTZA (ZAMORA)', 24, 752, 0),
+(535, 'GUADALUPE (ZAMORA)', 24, 753, 0),
+(536, 'EL INGENIO (LOJA)', 9, 754, 0),
+(537, 'QUILANGA (LOJA)', 9, 755, 0),
+(538, 'EL LUCERO (LOJA)', 9, 756, 0),
+(539, 'CUMBARATZA (ZAMORA)', 24, 757, 0),
+(540, 'PALTAS (LOJA)', 9, 758, 0),
+(541, 'PACCHA (EL ORO)', 12, 759, 0),
+(542, 'SABANILLA (LOJA)', 9, 760, 0),
+(543, 'ROBLONES (LOJA)', 9, 761, 0),
+(544, 'LA CEIBA (LOJA)', 9, 762, 0),
+(545, 'ALGARROBILLO (LOJA)', 9, 763, 0),
+(546, 'CRUZPAMBA (LOJA)', 9, 764, 0),
+(547, 'RIO PLAYAS (LOJA)', 9, 765, 0),
+(548, 'EL EMPALME (LOJA)', 9, 766, 0),
+(549, 'EL EMPALME (GUAYAS)', 5, 767, 0),
+(550, 'LAS NAVES (BOLIVAR)', 14, 768, 0),
+(551, 'MANUEL J CALLE (GUAYAS)', 5, 769, 0),
+(552, 'PONCE ENRIQUEZ (AZUAY)', 4, 770, 0),
+(553, 'SAN LORENZO (BOLIVAR)', 14, 771, 0),
+(554, 'SUCUA (MORONA SANTIAGO)', 16, 773, 0),
+(555, 'ZULEMA (LOS RIOS)', 15, 135, 0),
+(556, 'TAURA (GUAYAS)', 5, 775, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `command_log`
+--
+
+CREATE TABLE IF NOT EXISTS `command_log` (
+  `ID_LOG` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_COMANDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Argumentos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `OPCIONES` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `FECHA_EJECUCION` datetime DEFAULT NULL,
+  `FECHA_TERMINO` datetime DEFAULT NULL,
+  `CODE` int DEFAULT NULL,
+  `MENSAJE` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`ID_LOG`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cupon`
+--
+
+CREATE TABLE IF NOT EXISTS `cupon` (
+  `IDCUPON` int NOT NULL AUTO_INCREMENT,
+  `CODIGO_CUPON` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_INICIO_CUPON` datetime DEFAULT NULL,
+  `FECHA_FIN_CUPON` datetime DEFAULT NULL,
+  `TIPO_DESCUENTO` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VALOR_DESCUENTO` double NOT NULL,
+  `GASTO_MINIMO` double DEFAULT NULL,
+  `ACTIVO_CUPON` tinyint(1) DEFAULT NULL,
+  `DESCRIPCION_CUPON` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `LIMITE_USO` int DEFAULT NULL,
+  `USO_CUPON` int DEFAULT NULL,
+  `ENVIO_GRATIS` tinyint(1) DEFAULT NULL,
+  `CREATED_AT` datetime DEFAULT NULL,
+  `UPDATED_AT` datetime DEFAULT NULL,
+  `TIPO_CUPON` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDTIENDA` int DEFAULT NULL,
+  `AÑADIDO_SALDO` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`IDCUPON`),
+  UNIQUE KEY `unique_codigo_valor` (`CODIGO_CUPON`),
+  KEY `IDX_58CFF9496248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Disparadores `cupon`
+--
+DELIMITER $$
+CREATE TRIGGER `deactivate_coupon_after_limit` BEFORE UPDATE ON `cupon` FOR EACH ROW BEGIN
+  IF NEW.USO_CUPON = NEW.LIMITE_USO THEN
+    SET NEW.ACTIVO_CUPON = false;
+  END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cupones_login`
+--
+
+CREATE TABLE IF NOT EXISTS `cupones_login` (
+  `IDCUPON` int NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  PRIMARY KEY (`IDCUPON`,`IDLOGIN`),
+  KEY `IDX_9EB2B388B18F6B4A` (`IDCUPON`),
+  KEY `IDX_9EB2B38843485913` (`IDLOGIN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `destacados`
+--
+
+CREATE TABLE IF NOT EXISTS `destacados` (
+  `ID_DESTACADO` int NOT NULL AUTO_INCREMENT,
+  `TITULO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DESCRIPCION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_CREACION` datetime NOT NULL,
+  `FECHA_ACTUALIZACION` datetime DEFAULT NULL,
+  `ICONO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `HREF` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ORDEN` int NOT NULL,
+  `IDPRODUCTO` int DEFAULT NULL,
+  PRIMARY KEY (`ID_DESTACADO`),
+  UNIQUE KEY `UNIQ_ED9D1FCA6F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_carrito`
+--
+
+CREATE TABLE IF NOT EXISTS `detalle_carrito` (
+  `ID_DETALLE_CARRITO` int NOT NULL AUTO_INCREMENT,
+  `CANTIDAD_PRODUCTO` int DEFAULT NULL,
+  `IDCARRITO` int NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  `IDVARIACION` int DEFAULT NULL,
+  PRIMARY KEY (`ID_DETALLE_CARRITO`),
+  KEY `IDX_3F38507DEC20F254` (`IDCARRITO`),
+  KEY `IDX_3F38507D6F15327` (`IDPRODUCTO`),
+  KEY `IDX_3F38507D5C4D67D1` (`IDVARIACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_pedido`
+--
+
+CREATE TABLE IF NOT EXISTS `detalle_pedido` (
+  `IDDETALLE_PEDIDO` int NOT NULL AUTO_INCREMENT,
+  `CANTIDAD` int DEFAULT NULL,
+  `SUBTOTAL` double DEFAULT NULL,
+  `IMPUESTO` double DEFAULT NULL,
+  `DESCUENTO_PRODUCTO` double DEFAULT NULL,
+  `COSTO_TOTAL` double DEFAULT NULL,
+  `CIUDAD_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `DIRECCION_REMITE` varchar(700) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  `IDVARIACION` int DEFAULT NULL,
+  `IDPEDIDO` int NOT NULL,
+  `IDTIENDA` int NOT NULL,
+  `NOMBRE_PRODUCTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ID_SERVIENTREGA` int DEFAULT NULL,
+  `PROVINCIA_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `REGION_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `PESO_PRODUCTO` double DEFAULT NULL,
+  `SUBTOTAL_ORIGINAL` double DEFAULT NULL,
+  `LATITUD` double DEFAULT NULL,
+  `LONGITUD` double DEFAULT NULL,
+  `CELULAR_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `REFERENCIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `NOMBRE_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `TOTAL_PRECIO_UNITARIO` double DEFAULT NULL,
+  `IVA_PRECIO_UNITARIO` double DEFAULT NULL,
+  `SUBTOTAL_PRECIO_UNITARIO` double DEFAULT NULL,
+  `CODIGO_PRODUCTO` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`IDDETALLE_PEDIDO`),
+  KEY `IDX_A834F5696F15327` (`IDPRODUCTO`),
+  KEY `IDX_A834F5695C4D67D1` (`IDVARIACION`),
+  KEY `IDX_A834F5696662272E` (`IDPEDIDO`),
+  KEY `IDX_A834F5696248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Disparadores `detalle_pedido`
+--
+DELIMITER $$
+CREATE TRIGGER `update_stock_before_order` BEFORE INSERT ON `detalle_pedido` FOR EACH ROW BEGIN
+    -- Verificar si el detalle del pedido tiene una variación asociada
+    IF NEW.IDVARIACION IS NOT NULL THEN
+        -- Si hay una variación, reducir el stock de la variación
+        UPDATE variaciones
+        SET CANTIDAD_VARIACION = CANTIDAD_VARIACION - NEW.CANTIDAD
+        WHERE IDVARIACION = NEW.IDVARIACION;
+    ELSE
+        -- Si no hay variación, reducir el stock del producto base
+        UPDATE productos
+        SET CANTIDAD_PRODUCTO = CANTIDAD_PRODUCTO - NEW.CANTIDAD
+        WHERE IDPRODUCTO = NEW.IDPRODUCTO;
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `entregas_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `entregas_tipo` (
+  `TIPOS_ENTREGA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDESTADO` int NOT NULL,
+  `IDENTRAGAS_TIPO` int NOT NULL AUTO_INCREMENT,
+  `SLUG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDENTRAGAS_TIPO`),
+  KEY `IDX_E60B2B3B84D3D003` (`IDESTADO`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `entregas_tipo`
+--
+
+INSERT INTO `entregas_tipo` (`TIPOS_ENTREGA`, `IDESTADO`, `IDENTRAGAS_TIPO`, `SLUG`) VALUES
+('A DOMICILIO', 1, 1, 'a_domicilio'),
+('RETIRO EN TIENDA FISICA', 1, 2, 'retiro_tienda_fisica'),
+('NO ESPECIFICADO', 1, 5, 'no_especificado');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estados`
+--
+
+CREATE TABLE IF NOT EXISTS `estados` (
+  `IDESTADO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_ESTADO` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO_ESTADO` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ESTADO_SLUG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDESTADO`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `estados`
+--
+
+INSERT INTO `estados` (`IDESTADO`, `NOMBRE_ESTADO`, `TIPO_ESTADO`, `ESTADO_SLUG`) VALUES
+(1, 'ACTIVO', 'USUARIO', NULL),
+(2, 'INACTIVO', 'USUARIO', NULL),
+(3, 'VERIFICADO', 'TIENDA', NULL),
+(4, 'NO VERIFICADO', 'TIENDA', NULL),
+(5, 'NUEVO', 'PRODUCTO', 'nuevo'),
+(6, 'USADO', 'PRODUCTO', 'usado'),
+(7, 'VERIFICADO', 'USUARIO', NULL),
+(8, 'NO VERIFICADO', 'USUARIO', NULL),
+(9, 'RENOVADO', 'PRODUCTO', 'renovado'),
+(10, 'ACTIVO', 'ENTREGA_TIPO', NULL),
+(11, 'INACTIVO', 'ENTREGA_TIPO', NULL),
+(12, 'OPEN BOX', 'PRODUCTO', 'open_box'),
+(13, 'ACTIVO', 'DIRECCION', NULL),
+(14, 'INACTIVO', 'DIRECCION', NULL),
+(15, 'VERIFICADO', 'BIOMETRICO', NULL),
+(16, 'NO_VERIFICADO', 'BIOMETRICO', NULL),
+(19, 'INGRESADO', 'PEDIDO', NULL),
+(20, 'RETIRADO', 'PEDIDO', NULL),
+(21, 'EN PROCESO', 'PEDIDO', NULL),
+(22, 'ENTREGADO', 'PEDIDO', NULL),
+(23, 'PENDIENTE', 'PEDIDO', NULL),
+(24, 'CANCELADO', 'PEDIDO', NULL),
+(25, 'GENERADA', 'PEDIDO', NULL),
+(26, 'LISTO PARA RETIRAR', 'PEDIDO', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `event`
+--
+
+CREATE TABLE IF NOT EXISTS `event` (
+  `ID_EVENT` int NOT NULL AUTO_INCREMENT,
+  `EVENTNAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `TIMESTAP` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `USER` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SESSION_ID` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EVENTDATA` json NOT NULL,
+  `SDK_VERSION` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CLIENT_ID` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SCHEMA_VERSION` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_EVENT`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `factura`
+--
+
+CREATE TABLE IF NOT EXISTS `factura` (
+  `IDFACTURA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `APELLIDO_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TELEFONO_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EMAIL_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DNI_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `FECHA_FACTURA` datetime DEFAULT NULL,
+  `CONSUMIDOR_FINAL` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`IDFACTURA`),
+  KEY `IDX_F9EBA00943485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=354 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `funciones_especiales`
+--
+
+CREATE TABLE IF NOT EXISTS `funciones_especiales` (
+  `IDFUNCION` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_FUNCION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ACTIVO` tinyint(1) DEFAULT NULL,
+  `DESCRIPCION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDFUNCION`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `funciones_especiales`
+--
+
+INSERT INTO `funciones_especiales` (`IDFUNCION`, `NOMBRE_FUNCION`, `ACTIVO`, `DESCRIPCION`, `TIPO`) VALUES
+(1, 'Primera compra', 1, 'Costo envio cero en primera compra aprovada al activar esta funcion', NULL),
+(2, 'email_notificacion_pedidos', 1, 'jarevalo@sodigsa.com', NULL),
+(3, 'Excel Servientrega', 1, 'rmendoza@sodigsa.com,solicitudes.quito@servientrega.com.ec,servicioalcliente@servientrega.com.ec,recoleccion.quito@servientrega.com.ec', NULL),
+(4, 'email_notoficacion_perdidos_transferencias', 0, 'csuarez@sodigsa.com', NULL),
+(5, 'notificacion_facturacion', 1, 'pvillavicencio@jrelectric.com.ec', NULL),
+(6, 'maxkeys_events', 1, '10', NULL),
+(7, 'maxdepth_events', 1, '3', NULL),
+(8, 'only_strings_events', 1, 'true', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `galeria_tienda`
+--
+
+CREATE TABLE IF NOT EXISTS `galeria_tienda` (
+  `IDGALERIA_TIENDA` int NOT NULL AUTO_INCREMENT,
+  `URL_IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PRIORIDAD` int DEFAULT NULL,
+  `SECCION_PAGINA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDTIENDA` int NOT NULL,
+  PRIMARY KEY (`IDGALERIA_TIENDA`),
+  KEY `IDX_5DB15BBA6248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB AUTO_INCREMENT=323 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ganancia`
+--
+
+CREATE TABLE IF NOT EXISTS `ganancia` (
+  `IDGANANCIA` int NOT NULL AUTO_INCREMENT,
+  `GANANCIA` double DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `SALDO_DISPONIBLE` double DEFAULT NULL,
+  `TOTAL_RETIRADO` double DEFAULT NULL,
+  `TOTAL_RECIBIDO` double DEFAULT NULL,
+  `TOTAL_COMISION` double DEFAULT NULL,
+  PRIMARY KEY (`IDGANANCIA`),
+  UNIQUE KEY `UNIQ_1B83752443485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=1496 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `generales_app`
+--
+
+CREATE TABLE IF NOT EXISTS `generales_app` (
+  `IDGENERALES_APP` int NOT NULL AUTO_INCREMENT,
+  `VALOR_GENERAL` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ATRIBUTO_GENERAL` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO_AMBIENTE` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO_SERVICIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NOMBRE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDGENERALES_APP`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `generales_app`
+--
+
+INSERT INTO `generales_app` (`IDGENERALES_APP`, `VALOR_GENERAL`, `ATRIBUTO_GENERAL`, `TIPO_AMBIENTE`, `TIPO_SERVICIO`, `NOMBRE`) VALUES
+(1, '', 'Login', 'dev', 'pago', 'placetopay'),
+(2, '', 'SecretKey', 'dev', 'pago', 'placetopay'),
+(3, '', 'Url', 'dev', 'pago', 'placetopay'),
+(4, '', 'Login', 'dev', 'pago', 'paypal'),
+(5, '', 'SecretKey', 'dev', 'pago', 'paypal'),
+(6, '', 'Url', 'dev', 'pago', 'paypal'),
+(7, '', 'Url', 'dev', 'redirect', 'front'),
+(8, '', 'Url', 'dev', 'redirect', 'admin'),
+(9, '', 'Login', 'prod', 'biometrico', 'biometrico'),
+(10, '', 'SecretKey', 'prod', 'biometrico', 'biometrico'),
+(11, '', 'Url', 'prod', 'biometrico', 'biometrico'),
+(12, '', 'Login', 'dev', 'envio', 'servientrega'),
+(13, '', 'SecretKey', 'dev', 'envio', 'servientrega'),
+(14, '', 'Url', 'dev', 'envio', 'servientrega'),
+(15, '', 'PDF', 'dev', 'envio', 'servientrega'),
+(16, '', 'WSL', 'prod', 'envio', 'servientrega'),
+(17, '', 'SOAP', 'prod', 'envio', 'servientrega'),
+(18, '', 'Login', 'dev', 'envio', 'delivereo'),
+(19, '', 'SecretKey', 'dev', 'envio', 'delivereo'),
+(20, '', 'Password', 'dev', 'envio', 'delivereo'),
+(21, '', 'Email', 'dev', 'envio', 'delivereo'),
+(22, '', 'Url', 'dev', 'envio', 'delivereo'),
+(23, '', 'Url', 'dev', 'marketing', 'hubspot'),
+(24, '', 'SecretKey', 'dev', 'marketing', 'hubspot'),
+(25, '', 'Url', 'dev', 'marketing', 'brevo'),
+(26, '', 'SecretKey', 'dev', 'marketing', 'brevo'),
+(27, '', 'Login', 'dev', 'message', 'whatsapp'),
+(28, '', 'Token', 'dev', 'message', 'whatsapp'),
+(29, '', 'SecretKey', 'dev', 'message', 'whatsapp'),
+(30, '', 'Catalog', 'dev', 'message', 'whatsapp'),
+(31, '', 'Api_Version', 'dev', 'message', 'whatsapp'),
+(32, '', 'Url', 'dev', 'message', 'whatsapp'),
+(33, '', 'Login', 'prod', 'login', 'apple'),
+(34, '', 'Team', 'prod', 'login', 'apple'),
+(35, '', 'SecretKey', 'prod', 'login', 'apple'),
+(36, '', 'Url', 'prod', 'redirect', 'apple'),
+(37, '', 'Login', 'dev', 'login', 'google'),
+(38, '', 'SecretKey', 'dev', 'login', 'google'),
+(39, '', 'Url', 'dev', 'redirect', 'google'),
+(40, '', 'Login', 'dev', 'login', 'facebook'),
+(41, '', 'SecretKey', 'dev', 'login', 'facebook'),
+(42, '', 'Url', 'dev', 'redirect', 'facebook'),
+(43, '', 'Api_Version', 'dev', 'login', 'facebook'),
+(44, '', 'Url', 'dev', 'llm', 'ollama'),
+(45, '', 'Login', 'dev', 'email', 'gmail'),
+(46, '', 'SecretKey', 'dev', 'email', 'gmail'),
+(47, '', 'smtpEncryption', 'dev', 'email', 'gmail'),
+(48, '', 'Username', 'dev', 'email', 'gmail'),
+(49, '', 'Url', 'dev', 'facturacion', 'Facturador_SODIG'),
+(50, '', 'SecretKey', 'dev', 'facturacion', 'Facturador_SODIG'),
+(51, '', 'Password', 'dev', 'facturacion', 'Facturador_SODIG');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `hotspot`
+--
+
+CREATE TABLE IF NOT EXISTS `hotspot` (
+  `IDHOTSPOT` int NOT NULL AUTO_INCREMENT,
+  `CORDENADA_HORIZONTAL` double NOT NULL,
+  `CORDENADA_VERTICAL` double NOT NULL,
+  `IDSCENE` int NOT NULL,
+  `TIPO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TEXTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `URL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SLUG_PRODUCTO` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDHOTSPOT`),
+  KEY `IDX_48B3831330397DD9` (`IDSCENE`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `impuestos`
+--
+
+CREATE TABLE IF NOT EXISTS `impuestos` (
+  `IDIMPUESTO` int NOT NULL AUTO_INCREMENT,
+  `IMPUESTO` double NOT NULL,
+  `NOMBRE_IMPUESTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDIMPUESTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `impuestos`
+--
+
+INSERT INTO `impuestos` (`IDIMPUESTO`, `IMPUESTO`, `NOMBRE_IMPUESTO`) VALUES
+(1, 15, 'IVA % no mayor a 100'),
+(2, 0.005, 'SEGURO_ENVIO entero, no mayor a 1'),
+(3, 4, 'Paypal % no mayor a 100');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `lista_productos_detallados`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `lista_productos_detallados` (
+`ALTO_PRODUCTO` double
+,`ANCHO_PROODUCTO` double
+,`atributos` text
+,`CANTIDAD_PRODUCTO` int
+,`COBRO_SERVICIO` varchar(255)
+,`CODIGO_PRODUCTO` varchar(50)
+,`DESCRIPCION_CORTA_PRODUCTO` longtext
+,`DESCRIPCION_LARGA_PRODUCTO` longtext
+,`EAN_PRODUCTO` varchar(45)
+,`ETIQUETAS_PRODUCTO` varchar(500)
+,`FECHA_EDICION_PRODUCTO` datetime
+,`FECHA_REGISTRO_PRODUCTO` datetime
+,`FICHA_TECNICA_PRODUCTO` longtext
+,`FROM_FORM` tinyint(1)
+,`GARANTIA_PRODUCTO` varchar(300)
+,`IDCIUDAD` int
+,`IDENTRAGAS_TIPO` int
+,`IDESTADO` int
+,`IDMARCA` int
+,`IDPRODUCTO` int
+,`IDTIENDA` int
+,`IDTIPO_PRODUCTO` int
+,`IDTIPO_VENTA` int
+,`IDUSUARIOS_DIRECCIONES` int
+,`IMAGEN_PRODUCTO` varchar(120)
+,`LARGO_PRODUCTO` double
+,`META_PRODUCTO` longtext
+,`NOMBRE_PRODUCTO` varchar(250)
+,`PESO_PRODUCTO` double
+,`PRECIO_NORMAL_PRODUCTO` double
+,`PRECIO_REBAJADO_PRODUCTO` double
+,`PRODUCTO_BORRADOR` tinyint(1)
+,`PRODUCTO_DISPONIBILIDAD` tinyint(1)
+,`PRODUCTO_INCLUIDO_IMPUESTOS` tinyint(1)
+,`PRODUCTO_SUSPENDIDO` tinyint(1)
+,`PRODUCTO_TIENE_IVA` tinyint(1)
+,`PRODUCTO_VARIABLE` tinyint(1)
+,`REGATEO_PRODUCTO` tinyint(1)
+,`SKU_PRODUCTO` varchar(20)
+,`SLUG_PRODUCTO` varchar(500)
+,`TIEMPO_ENTREGA` int
+,`TIENE_DESCUENTO` tinyint(1)
+,`TIPO_SERVICIO` varchar(255)
+,`VIDEO_PRODUCTO` varchar(80)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `login`
+--
+
+CREATE TABLE IF NOT EXISTS `login` (
+  `IDLOGIN` int NOT NULL AUTO_INCREMENT,
+  `EMAIL_LOGIN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `USUARIO_LOGIN` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `PASSWORD_LOGIN` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `LAST_LOGIN` datetime DEFAULT NULL,
+  `FECHA_REGISTRO_LOGIN` datetime DEFAULT NULL,
+  `LOGIN_ROLES` json NOT NULL,
+  `IDESTADO` int DEFAULT NULL,
+  `IDVERIFICACION` int DEFAULT NULL,
+  `TOKEN_VERSION` int DEFAULT '1',
+  `GOOGLE_ID` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `FACEBOOK_ID` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `APPLE_ID` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`IDLOGIN`),
+  UNIQUE KEY `UNIQ_AA08CB10BDEA1D41` (`EMAIL_LOGIN`),
+  UNIQUE KEY `UNIQ_AA08CB109636A6DD` (`USUARIO_LOGIN`),
+  KEY `IDX_AA08CB1084D3D003` (`IDESTADO`),
+  KEY `IDX_AA08CB103AB8AF19` (`IDVERIFICACION`)
+) ENGINE=InnoDB AUTO_INCREMENT=847 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `logs_api`
+--
+
+CREATE TABLE IF NOT EXISTS `logs_api` (
+  `IDLOG` int NOT NULL AUTO_INCREMENT,
+  `ESTATUS_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ACCTION_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_LOG` datetime DEFAULT NULL,
+  `TOKEN_LOG` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `IP_ADDRESS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int DEFAULT NULL,
+  `MENSAJE_LOG` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `METHOD_LOG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDLOG`),
+  KEY `IDX_F531ED8543485913` (`IDLOGIN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `logs_front`
+--
+
+CREATE TABLE IF NOT EXISTS `logs_front` (
+  `ID_LOG_FRONT` int NOT NULL AUTO_INCREMENT,
+  `MENSAJE` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_REGISTRO` datetime NOT NULL,
+  `CONTEXTO` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NIVEL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `META` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_LOG_FRONT`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `messenger_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `messenger_messages` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `body` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `headers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue_name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `available_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `delivered_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (`id`),
+  KEY `IDX_75EA56E0FB7336F0E3BD61CE16BA31DBBF396750` (`queue_name`,`available_at`,`delivered_at`,`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodos_envio`
+--
+
+CREATE TABLE IF NOT EXISTS `metodos_envio` (
+  `ID_METODOENVIO` int NOT NULL AUTO_INCREMENT,
+  `METODO_ENVIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ACTIVO` tinyint(1) DEFAULT NULL,
+  `CONTACTO_ENVIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESCRIPCION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_METODOENVIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `metodos_envio`
+--
+
+INSERT INTO `metodos_envio` (`ID_METODOENVIO`, `METODO_ENVIO`, `ACTIVO`, `CONTACTO_ENVIO`, `DESCRIPCION`) VALUES
+(1, 'Servientrega', 1, NULL, 'Envíos a nivel nacional. Tiempo de entrega estimado: 24 a 72 horas.'),
+(2, 'Envío Express', 0, 'jarevalo@sodigsa.com', NULL),
+(3, 'Delivereo', 1, NULL, ' Exclusivo para envíos dentro de la misma ciudad: Quito-Quito o Guayaquil-Guayaquil. Tiempo de entrega estimado: 1 a 6 horas.');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodos_logeo`
+--
+
+CREATE TABLE IF NOT EXISTS `metodos_logeo` (
+  `ID_METODO_LOGEO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_METODO_LOGEO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `HABILITADO_METODO_LOGEO` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`ID_METODO_LOGEO`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `metodos_logeo`
+--
+
+INSERT INTO `metodos_logeo` (`ID_METODO_LOGEO`, `NOMBRE_METODO_LOGEO`, `HABILITADO_METODO_LOGEO`) VALUES
+(1, 'google', 1),
+(2, 'apple', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodos_pago`
+--
+
+CREATE TABLE IF NOT EXISTS `metodos_pago` (
+  `IDMETODOPAGO` int NOT NULL AUTO_INCREMENT,
+  `METODOPAGO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IS_ACTIVE` tinyint(1) DEFAULT NULL,
+  `DESCRIPCION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDMETODOPAGO`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `metodos_pago`
+--
+
+INSERT INTO `metodos_pago` (`IDMETODOPAGO`, `METODOPAGO`, `IS_ACTIVE`, `DESCRIPCION`) VALUES
+(1, 'Depósito o transferencia bancaria', 1, 'Depósito cuenta corriente – Banco Pichincha.'),
+(2, 'Placetopay', 1, 'Pago con tarjetas de crédito / débito Visa, American Express, Master Card, Discover, Diners Club.'),
+(3, 'Paypal', 1, 'Pagos con tarjetas de crédito o débito.'),
+(4, 'Saldo Shopby', 1, 'Saldo acumulado de tus ventas.');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ofertas`
+--
+
+CREATE TABLE IF NOT EXISTS `ofertas` (
+  `IDOFERTA` int NOT NULL AUTO_INCREMENT,
+  `MONTO` double NOT NULL,
+  `FECHA_CREACION` datetime NOT NULL,
+  `FECHA_EDICION` datetime DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDSUBASTA` int NOT NULL,
+  PRIMARY KEY (`IDOFERTA`),
+  KEY `IDX_48C925F343485913` (`IDLOGIN`),
+  KEY `IDX_48C925F3C7FC4A45` (`IDSUBASTA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pais`
+--
+
+CREATE TABLE IF NOT EXISTS `pais` (
+  `IDPAIS` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_PAIS` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `COD_PAIS` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `COD_AREA` int DEFAULT NULL,
+  `LANG` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDPAIS`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `pais`
+--
+
+INSERT INTO `pais` (`IDPAIS`, `NOMBRE_PAIS`, `COD_PAIS`, `COD_AREA`, `LANG`) VALUES
+(1, 'ECUADOR', 'ECU', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos`
+--
+
+CREATE TABLE IF NOT EXISTS `pedidos` (
+  `IDPEDIDO` int NOT NULL AUTO_INCREMENT,
+  `FECHA_PEDIDO` datetime NOT NULL,
+  `NOMBRE_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DNI_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CELULAR_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CODIGO_POSTAL_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CIUDAD_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `NUMERO_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `REFERENCIA_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDFACTURA` int DEFAULT NULL,
+  `PEDIDO_AUTORIZACION` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ID_SERVIENTREGA` int DEFAULT NULL,
+  `DIRECCION_PRINCIPAL_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_SECUNDARIA_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `UBICACION_REFERENCIA_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ESTADO_PAGO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDESTADO_ENVIO` int DEFAULT NULL,
+  `IDESTADO_RETIRO` int DEFAULT NULL,
+  `TIPO_ENVIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `N_VENTA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IDMETODOPAGO` int DEFAULT NULL,
+  `IDCUPON` int DEFAULT NULL,
+  `PROVINCIA_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `REGION_CLIENTE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDTIENDA` int DEFAULT NULL,
+  `ID_METODOENVIO` int DEFAULT NULL,
+  `PEDIDO_SUBTOTAL` double DEFAULT NULL,
+  `PEDIDO_IVA` double DEFAULT NULL,
+  `PEDIDO_COSTO_ENVIO` double DEFAULT NULL,
+  `COMISION_PAYPAL` double DEFAULT NULL,
+  `PEDIDO_TOTAL_FINAL` double DEFAULT NULL,
+  `PEDIDO_DESCUENTO_CUPON` double DEFAULT NULL,
+  `SUBTOTAL_ORIGINAL` double DEFAULT NULL,
+  `LATITUD_USUARIO` double DEFAULT NULL,
+  `LONGITUD_USUARIO` double DEFAULT NULL,
+  `GUIA_CONTADOR` int DEFAULT NULL,
+  `FECHA_PAGO` datetime DEFAULT NULL,
+  `FECHA_RECHAZO_PAGO` datetime DEFAULT NULL,
+  `FECHA_LISTO_PARA_RETIRAR_ADOMICILIO` datetime DEFAULT NULL,
+  `FECHA_RETIRO_ADOMICILIO` datetime DEFAULT NULL,
+  `FECHA_ENTREGADO_ADOMICILIO` datetime DEFAULT NULL,
+  `FECHA_LISTO_PARA_RETIRAR_FISICO` datetime DEFAULT NULL,
+  `FECHA_ENTREGO_FISICO` datetime DEFAULT NULL,
+  `SUBTOTAL_ENVIO` double DEFAULT NULL,
+  `IVA_ENVIO` double DEFAULT NULL,
+  `SUBTOTAL_MAS_IVA` double DEFAULT NULL,
+  `PORCENTAJE_IVA` double DEFAULT NULL,
+  `ID_REGATEO` int DEFAULT NULL,
+  `URL_PAGO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_EN_CAMINO` datetime DEFAULT NULL,
+  `REFERENCIA_INTERNA_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CLAVE_FACTURADOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ESTADO_FACTURADOR` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NUMERO_FACTURA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_FACTURACION` datetime DEFAULT NULL,
+  `MONTO_SALDO` double DEFAULT NULL,
+  `MONTO_PASARELA` double DEFAULT NULL,
+  `PAGO_MIXTO` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`IDPEDIDO`),
+  UNIQUE KEY `UNIQ_6716CCAA75DA3E8D` (`NUMERO_PEDIDO`),
+  KEY `IDX_6716CCAA43485913` (`IDLOGIN`),
+  KEY `IDX_6716CCAA622DEC88` (`IDFACTURA`),
+  KEY `IDX_6716CCAA43D657DF` (`IDESTADO_RETIRO`),
+  KEY `IDX_6716CCAA8184F9E3` (`IDMETODOPAGO`),
+  KEY `IDX_6716CCAAB18F6B4A` (`IDCUPON`),
+  KEY `IDX_6716CCAA6248D4DE` (`IDTIENDA`),
+  KEY `IDX_6716CCAABDB8FCAA` (`ID_METODOENVIO`),
+  KEY `IDX_6716CCAAAC214E10` (`ID_REGATEO`),
+  KEY `IDX_6716CCAAD597B125` (`IDESTADO_ENVIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=1117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Disparadores `pedidos`
+--
+DELIMITER $$
+CREATE TRIGGER `actualizar_stock_despues_de_cancelado` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE detalle_producto_id INT;
+    DECLARE detalle_variacion_id INT; -- Variable para almacenar el ID de la variación
+    DECLARE cantidad_pedida INT;
+
+    -- Modificar el cursor para seleccionar también IDVARIACION
+    DECLARE cur CURSOR FOR
+        SELECT IDPRODUCTO, IDVARIACION, CANTIDAD
+        FROM detalle_pedido
+        WHERE IDPEDIDO = NEW.IDPEDIDO;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    -- La condición para ejecutar el trigger (pedido pasa a estado CANCELLED y tiene el prefijo 'PED-001%')
+    IF NEW.ESTADO_PAGO = 'CANCELLED' AND OLD.ESTADO_PAGO <> 'CANCELLED'
+    THEN
+        OPEN cur;
+
+        read_loop: LOOP
+            -- Obtener IDPRODUCTO, IDVARIACION y CANTIDAD del cursor
+            FETCH cur INTO detalle_producto_id, detalle_variacion_id, cantidad_pedida;
+
+            IF done THEN
+                LEAVE read_loop;
+            END IF;
+
+            -- Lógica condicional para actualizar el stock según la variación
+            IF detalle_variacion_id IS NOT NULL THEN
+                -- Si el detalle del pedido tiene una variación, restaurar stock a la variación
+                UPDATE variaciones
+                SET CANTIDAD_VARIACION = CANTIDAD_VARIACION + cantidad_pedida
+                WHERE IDVARIACION = detalle_variacion_id;
+            ELSE
+                -- Si el detalle del pedido NO tiene una variación, restaurar stock al producto base
+                UPDATE productos
+                SET CANTIDAD_PRODUCTO = CANTIDAD_PRODUCTO + cantidad_pedida
+                WHERE IDPRODUCTO = detalle_producto_id;
+            END IF;
+
+        END LOOP;
+
+        CLOSE cur;
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `actualizar_stock_despues_de_rechazado` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE detalle_producto_id INT;
+    DECLARE detalle_variacion_id INT; -- Variable para almacenar el ID de la variación
+    DECLARE cantidad_pedida INT;
+
+    -- Modificar el cursor para seleccionar también IDVARIACION
+    DECLARE cur CURSOR FOR
+        SELECT IDPRODUCTO, IDVARIACION, CANTIDAD
+        FROM detalle_pedido
+        WHERE IDPEDIDO = NEW.IDPEDIDO;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    -- La condición para ejecutar el trigger (pedido pasa a estado REJECTED y tiene el prefijo 'PED-001%')
+    IF NEW.ESTADO_PAGO = 'REJECTED' AND OLD.ESTADO_PAGO <> 'REJECTED'
+    THEN
+        OPEN cur;
+
+        read_loop: LOOP
+            -- Obtener IDPRODUCTO, IDVARIACION y CANTIDAD del cursor
+            FETCH cur INTO detalle_producto_id, detalle_variacion_id, cantidad_pedida;
+
+            IF done THEN
+                LEAVE read_loop;
+            END IF;
+
+            -- Lógica condicional para actualizar el stock según la variación
+            IF detalle_variacion_id IS NOT NULL THEN
+                -- Si el detalle del pedido tiene una variación, restaurar stock a la variación
+                UPDATE variaciones
+                SET CANTIDAD_VARIACION = CANTIDAD_VARIACION + cantidad_pedida
+                WHERE IDVARIACION = detalle_variacion_id;
+            ELSE
+                -- Si el detalle del pedido NO tiene una variación, restaurar stock al producto base
+                UPDATE productos
+                SET CANTIDAD_PRODUCTO = CANTIDAD_PRODUCTO + cantidad_pedida
+                WHERE IDPRODUCTO = detalle_producto_id;
+            END IF;
+
+        END LOOP;
+
+        CLOSE cur;
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `reduce_stock_after_order` AFTER INSERT ON `pedidos` FOR EACH ROW BEGIN
+
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `preguntas`
+--
+
+CREATE TABLE IF NOT EXISTS `preguntas` (
+  `IDPREGUNTA` int NOT NULL AUTO_INCREMENT,
+  `PREGUNTA` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_PREGUNTA` datetime NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  PRIMARY KEY (`IDPREGUNTA`),
+  KEY `IDX_3879485543485913` (`IDLOGIN`),
+  KEY `IDX_387948556F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos`
+--
+
+CREATE TABLE IF NOT EXISTS `productos` (
+  `IDPRODUCTO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_PRODUCTO` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DESCRIPCION_CORTA_PRODUCTO` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `DESCRIPCION_LARGA_PRODUCTO` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `IMAGEN_PRODUCTO` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CANTIDAD_PRODUCTO` int DEFAULT NULL,
+  `SLUG_PRODUCTO` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PRECIO_NORMAL_PRODUCTO` double DEFAULT NULL,
+  `PRECIO_REBAJADO_PRODUCTO` double DEFAULT NULL,
+  `EAN_PRODUCTO` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SKU_PRODUCTO` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VIDEO_PRODUCTO` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `META_PRODUCTO` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `GARANTIA_PRODUCTO` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `REGATEO_PRODUCTO` tinyint(1) DEFAULT NULL,
+  `ETIQUETAS_PRODUCTO` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_REGISTRO_PRODUCTO` datetime DEFAULT NULL,
+  `IDTIENDA` int NOT NULL,
+  `IDESTADO` int NOT NULL,
+  `IDTIPO_VENTA` int NOT NULL,
+  `IDTIPO_PRODUCTO` int DEFAULT NULL,
+  `IDENTRAGAS_TIPO` int DEFAULT NULL,
+  `IDMARCA` int DEFAULT NULL,
+  `IDUSUARIOS_DIRECCIONES` int DEFAULT NULL,
+  `FECHA_EDICION_PRODUCTO` datetime DEFAULT NULL,
+  `PRODUCTO_VARIABLE` tinyint(1) NOT NULL,
+  `FICHA_TECNICA_PRODUCTO` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `PRODUCTO_DISPONIBILIDAD` tinyint(1) NOT NULL,
+  `LARGO_PRODUCTO` double DEFAULT NULL,
+  `ANCHO_PROODUCTO` double DEFAULT NULL,
+  `ALTO_PRODUCTO` double DEFAULT NULL,
+  `PRODUCTO_TIENE_IVA` tinyint(1) DEFAULT NULL,
+  `PRODUCTO_INCLUIDO_IMPUESTOS` tinyint(1) DEFAULT NULL,
+  `PESO_PRODUCTO` double DEFAULT NULL,
+  `TIENE_DESCUENTO` tinyint(1) DEFAULT NULL,
+  `PRODUCTO_SUSPENDIDO` tinyint(1) DEFAULT NULL,
+  `PRODUCTO_BORRADOR` tinyint(1) DEFAULT NULL,
+  `FROM_FORM` tinyint(1) DEFAULT NULL,
+  `COBRO_SERVICIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO_SERVICIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDCIUDAD` int DEFAULT NULL,
+  `TIEMPO_ENTREGA` int DEFAULT '72',
+  `CODIGO_PRODUCTO` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDPRODUCTO`),
+  UNIQUE KEY `UNIQ_767490E652934164` (`SLUG_PRODUCTO`),
+  UNIQUE KEY `UNIQ_767490E6F205BC6E` (`CODIGO_PRODUCTO`),
+  KEY `IDX_767490E66248D4DE` (`IDTIENDA`),
+  KEY `IDX_767490E684D3D003` (`IDESTADO`),
+  KEY `IDX_767490E6D66C2581` (`IDTIPO_VENTA`),
+  KEY `IDX_767490E6E9F88D07` (`IDTIPO_PRODUCTO`),
+  KEY `IDX_767490E66051064B` (`IDENTRAGAS_TIPO`),
+  KEY `IDX_767490E6EE4A9310` (`IDMARCA`),
+  KEY `IDX_767490E6CB4E313D` (`IDUSUARIOS_DIRECCIONES`),
+  KEY `IDX_767490E62C08347E` (`IDCIUDAD`)
+) ENGINE=InnoDB AUTO_INCREMENT=1831 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_categorias`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_categorias` (
+  `IDPRODUCTO` int NOT NULL,
+  `IDCATEGORIA` int NOT NULL,
+  PRIMARY KEY (`IDPRODUCTO`,`IDCATEGORIA`),
+  KEY `IDX_F48F98D76F15327` (`IDPRODUCTO`),
+  KEY `IDX_F48F98D7BD082930` (`IDCATEGORIA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_categorias_tienda`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_categorias_tienda` (
+  `IDPRODUCTO` int NOT NULL,
+  `IDCATEGORIA_TIENDA` int NOT NULL,
+  PRIMARY KEY (`IDPRODUCTO`,`IDCATEGORIA_TIENDA`),
+  KEY `IDX_9C160DEB6F15327` (`IDPRODUCTO`),
+  KEY `IDX_9C160DEB9EA5E911` (`IDCATEGORIA_TIENDA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_comentarios`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_comentarios` (
+  `IDCOMENTARIO` int NOT NULL AUTO_INCREMENT,
+  `COMENTARIO_PRODUCTO` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_COMENTARIO` datetime DEFAULT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  `PRODUCTO_CALIFICACION` int DEFAULT NULL,
+  `IDPEDIDO` int NOT NULL,
+  PRIMARY KEY (`IDCOMENTARIO`),
+  KEY `IDX_A95245DF6F15327` (`IDPRODUCTO`),
+  KEY `IDX_A95245DF43485913` (`IDLOGIN`),
+  KEY `IDX_A95245DF6662272E` (`IDPEDIDO`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_favoritos`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_favoritos` (
+  `IDFAVORITO` int NOT NULL AUTO_INCREMENT,
+  `FECHA_FAVORITO` datetime NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  PRIMARY KEY (`IDFAVORITO`),
+  KEY `IDX_4D16C1143485913` (`IDLOGIN`),
+  KEY `IDX_4D16C116F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_galeria`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_galeria` (
+  `IDPRODUCTO_GALERIA` int NOT NULL AUTO_INCREMENT,
+  `URL_PRODUCTO_GALERIA` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  PRIMARY KEY (`IDPRODUCTO_GALERIA`),
+  KEY `IDX_A10E30966F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_marcas`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_marcas` (
+  `IDMARCA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_MARCA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `COMPANIA_MARCA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `MARCAS_SLUG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `MARCAS_LOGO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PUBLISHED` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`IDMARCA`),
+  UNIQUE KEY `UNIQ_59945F76B683C8C0` (`NOMBRE_MARCA`),
+  UNIQUE KEY `UNIQ_59945F76A1FCD020` (`MARCAS_SLUG`)
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `productos_marcas`
+--
+
+INSERT INTO `productos_marcas` (`IDMARCA`, `NOMBRE_MARCA`, `COMPANIA_MARCA`, `MARCAS_SLUG`, `MARCAS_LOGO`, `PUBLISHED`) VALUES
+(1, 'Nvidia', 'NVIDIA', 'nvidia_geforce', 'nvidia-664f98c8a94f8.png', 1),
+(2, 'Intel Core', 'INTEL', 'intel_core', NULL, 1),
+(3, 'Ultra Gear', 'LG', 'ultra_gear', NULL, 1),
+(4, 'Apple', 'Apple', 'apple', 'apple-6633cd7f515de.png', 1),
+(5, 'TCL', NULL, 'tcl', NULL, 1),
+(6, 'Otros', NULL, 'otros', NULL, 1),
+(7, 'Windsor', NULL, 'windsor', NULL, 1),
+(8, 'Ecco', NULL, 'ecco', NULL, 1),
+(9, 'Hydro Flask', NULL, 'hydro_flask', 'hydro-flask-6633cb60cb611.png', 1),
+(10, 'Upayana', NULL, 'upayana', NULL, 1),
+(11, 'Acer', NULL, 'acer', NULL, 1),
+(12, 'Acool', NULL, 'acool', NULL, 1),
+(13, 'Adata', NULL, 'adata', NULL, 1),
+(14, 'Air Express', NULL, 'air_express', NULL, 1),
+(15, 'Aiwa', '', 'aiwa', NULL, 1),
+(16, 'Alcatel', NULL, 'alcatel', NULL, 1),
+(17, 'Alcatel-Magnavox', NULL, 'alcatel_magnavox', NULL, 1),
+(18, 'Amazon', NULL, 'amazon', NULL, 1),
+(19, 'AOAS', NULL, 'aoas', NULL, 1),
+(20, 'Asus', NULL, 'asus', NULL, 1),
+(21, 'Awei', NULL, 'awei', NULL, 1),
+(22, 'Baby Sport', NULL, 'baby_sport', NULL, 1),
+(23, 'Berlin Gerhaus', NULL, 'berlin_gerhaus', NULL, 1),
+(24, 'Berrcom', NULL, 'berrcom', NULL, 1),
+(25, 'Black + Deker', NULL, 'black_deker', NULL, 1),
+(26, 'BMQ', NULL, 'bmq', NULL, 1),
+(27, 'BQ', NULL, 'bq', NULL, 1),
+(28, 'Caterpilar', NULL, 'caterpilar', NULL, 1),
+(29, 'CLIO LIVE', NULL, 'clio_live', NULL, 1),
+(30, 'CLOC', NULL, 'cloc', NULL, 1),
+(31, 'COBY', NULL, 'coby', NULL, 1),
+(32, 'COMBO', NULL, 'combo', NULL, 1),
+(33, 'Coolpad', NULL, 'coolpad', NULL, 1),
+(34, 'Cubitt', NULL, 'cubitt', NULL, 1),
+(35, 'Dell', NULL, 'dell', NULL, 1),
+(36, 'Donnay', NULL, 'donnay', NULL, 1),
+(37, 'Ecoled', NULL, 'ecoled', NULL, 1),
+(38, 'ESBI', NULL, 'esbi', NULL, 1),
+(39, 'Etross', NULL, 'etross', NULL, 1),
+(40, 'Evolve', NULL, 'evolve', NULL, 1),
+(41, 'Exbom', NULL, 'exbom', NULL, 1),
+(42, 'FILA', NULL, 'fila', NULL, 1),
+(43, 'Gateway', NULL, 'gateway', NULL, 1),
+(46, 'GO-RIDE', NULL, 'go_ride', NULL, 1),
+(47, 'Google', NULL, 'google', NULL, 1),
+(48, 'HAVIT', NULL, 'havit', NULL, 1),
+(49, 'HEAD', NULL, 'head', NULL, 1),
+(50, 'HNM', NULL, 'hnm', NULL, 1),
+(51, 'HP', NULL, 'hp', NULL, 1),
+(52, 'Kenneth Cole', NULL, 'kenneth_cole', NULL, 1),
+(53, 'Karler', NULL, 'karler', NULL, 1),
+(54, 'Kingston', NULL, 'kingston', NULL, 1),
+(55, 'Kodak', NULL, 'kodak', NULL, 1),
+(56, 'LDNIO', NULL, 'ldnio', NULL, 1),
+(57, 'Lenovo', NULL, 'lenovo', NULL, 1),
+(58, 'LG', NULL, 'lg', NULL, 1),
+(59, 'Logic', NULL, 'logic', NULL, 1),
+(60, 'Logic-Magnavox', NULL, 'logic_magnavox', NULL, 1),
+(61, 'Logitech', NULL, 'logitech', NULL, 1),
+(62, 'Magnavox', NULL, 'magnavox', NULL, 1),
+(63, 'Microsoft', NULL, 'microsoft', NULL, 1),
+(64, 'Motorola', NULL, 'motorola', NULL, 1),
+(65, 'MSN', NULL, 'msn', NULL, 1),
+(66, 'Narwey', NULL, 'narwey', NULL, 1),
+(67, 'Nautica', NULL, 'nautica', NULL, 1),
+(68, 'Ninja', NULL, 'ninja', NULL, 1),
+(69, 'Nitron', NULL, 'nitron', NULL, 1),
+(70, 'Nokia', NULL, 'nokia', NULL, 1),
+(71, 'Numak', NULL, 'numak', NULL, 1),
+(72, 'Osmo', NULL, 'osmo', NULL, 1),
+(73, 'Penguin', NULL, 'penguin', NULL, 1),
+(74, 'Permasteel', NULL, 'permasteel', NULL, 1),
+(75, 'Poeroa', NULL, 'poeroa', NULL, 1),
+(76, 'QIHANG', NULL, 'qihang', NULL, 1),
+(77, 'Realme', NULL, 'realme', NULL, 1),
+(78, 'ROKU', NULL, 'roku', NULL, 1),
+(79, 'Samsung', NULL, 'samsung', 'samsung-663479e80f330.png', 1),
+(80, 'SB/SIB', NULL, 'sb_sib', NULL, 1),
+(81, 'Seagate', NULL, 'seagate', NULL, 1),
+(82, 'Slazenger', NULL, 'slazenger', NULL, 1),
+(83, 'Sony', NULL, 'sony', NULL, 1),
+(84, 'Stingray', NULL, 'stingray', NULL, 1),
+(85, 'Strata', NULL, 'strata', NULL, 1),
+(86, 'Tecno', NULL, 'tecno', NULL, 1),
+(87, 'TPLINK', NULL, 'tplink', 'tplink-67d9daa0b46f6.png', 1),
+(88, 'UMIDIGI', NULL, 'umidigi', NULL, 1),
+(89, 'UNNO TEKNO', NULL, 'unno_tekno', NULL, 1),
+(90, 'UNONU-ANMAINI', NULL, 'unonu_anmaini', NULL, 1),
+(91, 'UVERDE', NULL, 'uverde', NULL, 1),
+(92, 'VERBATIN', NULL, 'verbatin', NULL, 1),
+(93, 'VIVAMAX', NULL, 'vivamax', NULL, 1),
+(94, 'Western Digital', NULL, 'western_digital', NULL, 1),
+(95, 'Westing House', NULL, 'westing_house', NULL, 1),
+(96, 'Witery', NULL, 'witery', NULL, 1),
+(97, 'XIAMEN', NULL, 'xiamen', NULL, 1),
+(98, 'XIAOMI', NULL, 'xiaomi', 'xiaomi-6633ca2e6f457.png', 1),
+(99, 'YOLO', NULL, 'yolo', NULL, 1),
+(100, 'ZTE', NULL, 'zte', NULL, 1),
+(101, 'Milexus', NULL, 'milexus', NULL, 1),
+(104, 'Genérica', '', 'genérica', NULL, 1),
+(105, 'Genérico', '', 'genérico', NULL, 1),
+(106, 'Unonu-Magnabox', '', 'unonu-magnabox', NULL, 1),
+(107, 'Unonu-Samsung', '', 'unonu-samsung', NULL, 1),
+(113, 'Hamilton Beach', '', NULL, 'hamilton-beach-672ce8a36d5a7.png', 1),
+(115, 'Logitech 1', '', NULL, 'logitech-1-675c5092658cd.png', 1),
+(116, 'Logitech 2', '', NULL, 'logitech-2-67d9d94ba274f.png', 1),
+(119, 'unisex', '', NULL, 'unisex-67d9d960d3990.png', 1),
+(120, 'Intcomex', '', NULL, 'intcomex-67d9da276d9a9.png', 1),
+(122, 'TP-LINK', '', NULL, 'tp-link-67e5c4923a083.png', 1),
+(125, 'MUST', '', NULL, 'must-68684cc3100ab.png', 1),
+(126, 'BPI', '', NULL, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `productos_mas_vendidos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `productos_mas_vendidos` (
+`categorias` text
+,`ganancia` double
+,`IDPRODUCTO` int
+,`NOMBRE_PRODUCTO` varchar(250)
+,`NOMBRE_TIENDA` varchar(255)
+,`stock_producto` int
+,`tota_cantidad` decimal(32,0)
+,`tota_pedidos` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_subcategorias`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_subcategorias` (
+  `IDPRODUCTO` int NOT NULL,
+  `IDSUBCATEGORIA` int NOT NULL,
+  PRIMARY KEY (`IDPRODUCTO`,`IDSUBCATEGORIA`),
+  KEY `IDX_7C84AE6A6F15327` (`IDPRODUCTO`),
+  KEY `IDX_7C84AE6A77F8BC20` (`IDSUBCATEGORIA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_subcategorias_tienda`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_subcategorias_tienda` (
+  `IDSUBCATEGORIATIENDA` int NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  PRIMARY KEY (`IDSUBCATEGORIATIENDA`,`IDPRODUCTO`),
+  KEY `IDX_50AA68FEF0C98206` (`IDSUBCATEGORIATIENDA`),
+  KEY `IDX_50AA68FE6F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_tipo` (
+  `IDTIPO_PRODUCTO` int NOT NULL AUTO_INCREMENT,
+  `TIPO_PRODUCTO` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDTIPO_PRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `productos_tipo`
+--
+
+INSERT INTO `productos_tipo` (`IDTIPO_PRODUCTO`, `TIPO_PRODUCTO`) VALUES
+(1, 'FISICO'),
+(2, 'DIGITAL'),
+(3, 'GIFTCARD'),
+(4, 'SERVICIO');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos_ventas`
+--
+
+CREATE TABLE IF NOT EXISTS `productos_ventas` (
+  `IDTIPO_VENTA` int NOT NULL AUTO_INCREMENT,
+  `TIPO_VENTA_PRODUCTO` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDTIPO_VENTA`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `productos_ventas`
+--
+
+INSERT INTO `productos_ventas` (`IDTIPO_VENTA`, `TIPO_VENTA_PRODUCTO`) VALUES
+(1, 'NORMAL'),
+(2, 'SUBASTA');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_cupon`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_cupon` (
+  `IDPRODUCTO` int NOT NULL,
+  `IDCUPON` int NOT NULL,
+  PRIMARY KEY (`IDPRODUCTO`,`IDCUPON`),
+  KEY `IDX_18E8F1236F15327` (`IDPRODUCTO`),
+  KEY `IDX_18E8F123B18F6B4A` (`IDCUPON`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `prospecto`
+--
+
+CREATE TABLE IF NOT EXISTS `prospecto` (
+  `IDPROSPECTO` int NOT NULL AUTO_INCREMENT,
+  `EMAIL_PROSPECTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`IDPROSPECTO`),
+  UNIQUE KEY `UNIQ_217250492C98811` (`EMAIL_PROSPECTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `prospecto_cupon`
+--
+
+CREATE TABLE IF NOT EXISTS `prospecto_cupon` (
+  `IDPROSPECTO` int NOT NULL,
+  `IDCUPON` int NOT NULL,
+  PRIMARY KEY (`IDPROSPECTO`,`IDCUPON`),
+  KEY `IDX_3A0AC57AD26A6B54` (`IDPROSPECTO`),
+  KEY `IDX_3A0AC57AB18F6B4A` (`IDCUPON`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `provincias`
+--
+
+CREATE TABLE IF NOT EXISTS `provincias` (
+  `IDPROVINCIA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_PROVINCIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `REGION_PROVINCIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDPROVINCIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `provincias`
+--
+
+INSERT INTO `provincias` (`IDPROVINCIA`, `NOMBRE_PROVINCIA`, `REGION_PROVINCIA`) VALUES
+(1, 'PICHINCHA', 'SIERRA'),
+(2, 'IMBABURA', 'SIERRA'),
+(3, 'CARCHI', 'SIERRA'),
+(4, 'AZUAY', 'SIERRA'),
+(5, 'GUAYAS', 'COSTA'),
+(6, 'COTOPAXI', 'SIERRA'),
+(7, 'MANABI', 'COSTA'),
+(8, 'ESMERALDAS', 'COSTA'),
+(9, 'LOJA', 'SIERRA'),
+(10, 'CAÑAR', 'SIERRA'),
+(11, 'CHIMBORAZO', 'SIERRA'),
+(12, 'EL ORO', 'COSTA'),
+(13, 'GALAPAGOS', 'INSULAR'),
+(14, 'BOLIVAR', 'SIERRA'),
+(15, 'LOS RIOS', 'COSTA'),
+(16, 'MORONA SANTIAGO', 'ORIENTE'),
+(17, 'NAPO', 'ORIENTE'),
+(18, 'SUCUMBIOS', 'ORIENTE'),
+(19, 'PASTAZA', 'ORIENTE'),
+(20, 'SANTA ELENA', 'COSTA'),
+(21, 'SANTO DOMINGO', 'COSTA'),
+(22, 'TUNGURAHUA', 'SIERRA'),
+(23, 'FRANCISCO DE ORELLANA', 'ORIENTE'),
+(24, 'ZAMORA CHINCHIPE', 'ORIENTE');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `public_user`
+--
+
+CREATE TABLE IF NOT EXISTS `public_user` (
+  `IDUSUARIO` int NOT NULL AUTO_INCREMENT,
+  `USERNAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `PASSWORD` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`IDUSUARIO`),
+  UNIQUE KEY `UNIQ_F6CE94983E6D9A3B` (`USERNAME`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `public_user`
+--
+
+INSERT INTO `public_user` (`IDUSUARIO`, `USERNAME`, `PASSWORD`) VALUES
+(1, 'shopby', '$2b$13$7gShjERrJV2jj/2WnKtQJOWInjq2CX9s/POfEmizdtRmCd9whPeqK');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recargas`
+--
+
+CREATE TABLE IF NOT EXISTS `recargas` (
+  `ID_RECARGA` int NOT NULL AUTO_INCREMENT,
+  `FECHA_RECARGA` datetime NOT NULL,
+  `TIPO_RECARGA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ID_SALDO` int NOT NULL,
+  `IDRETIRO` int DEFAULT NULL,
+  `IDPRODUCTO` int DEFAULT NULL,
+  PRIMARY KEY (`ID_RECARGA`),
+  KEY `IDX_41AFC61D4981C500` (`ID_SALDO`),
+  KEY `IDX_41AFC61D672B646D` (`IDRETIRO`),
+  KEY `IDX_41AFC61D6F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `regateos`
+--
+
+CREATE TABLE IF NOT EXISTS `regateos` (
+  `ID_REGATEO` int NOT NULL AUTO_INCREMENT,
+  `REGATEO` double NOT NULL,
+  `FECHA_REGISTRO` datetime NOT NULL,
+  `ESTADO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_EDICION` datetime DEFAULT NULL,
+  `N_REGATEO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  `IDVARIACION` int DEFAULT NULL,
+  PRIMARY KEY (`ID_REGATEO`),
+  UNIQUE KEY `UNIQ_625222375E23943C` (`N_REGATEO`),
+  KEY `IDX_6252223743485913` (`IDLOGIN`),
+  KEY `IDX_625222376F15327` (`IDPRODUCTO`),
+  KEY `IDX_625222375C4D67D1` (`IDVARIACION`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reset_password_request`
+--
+
+CREATE TABLE IF NOT EXISTS `reset_password_request` (
+  `IDRESET` int NOT NULL AUTO_INCREMENT,
+  `selector` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hashed_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `requested_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `expires_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `IDLOGIN` int NOT NULL,
+  PRIMARY KEY (`IDRESET`),
+  KEY `IDX_7CE748A43485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `respuestas`
+--
+
+CREATE TABLE IF NOT EXISTS `respuestas` (
+  `IDRESPUESTA` int NOT NULL AUTO_INCREMENT,
+  `RESPUESTA` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_RESPUESTA` datetime NOT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDPREGUNTA` int NOT NULL,
+  PRIMARY KEY (`IDRESPUESTA`),
+  KEY `IDX_5CD06EB143485913` (`IDLOGIN`),
+  KEY `IDX_5CD06EB1FAAB4C5` (`IDPREGUNTA`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `retiros`
+--
+
+CREATE TABLE IF NOT EXISTS `retiros` (
+  `IDRETIRO` int NOT NULL AUTO_INCREMENT,
+  `VALOR_RETIRO` double NOT NULL,
+  `FECHA_RETIRO` datetime NOT NULL,
+  `IDGANANCIA` int NOT NULL,
+  `IDBANCO` int DEFAULT NULL,
+  `ESTADO_RETIRO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `COMISION_SHOPBY` double DEFAULT NULL,
+  `VALOR_RETIRO_FINAL` double DEFAULT NULL,
+  `COMENTARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `COMPROBANTE_PAGO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDRETIRO`),
+  KEY `IDX_88C295C3BAC92016` (`IDGANANCIA`),
+  KEY `IDX_88C295C39E9E73D2` (`IDBANCO`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `saldo`
+--
+
+CREATE TABLE IF NOT EXISTS `saldo` (
+  `ID_SALDO` int NOT NULL AUTO_INCREMENT,
+  `SALDO` double DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  PRIMARY KEY (`ID_SALDO`),
+  UNIQUE KEY `UNIQ_669B1D4A43485913` (`IDLOGIN`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `scenes`
+--
+
+CREATE TABLE IF NOT EXISTS `scenes` (
+  `IDSCENE` int NOT NULL AUTO_INCREMENT,
+  `IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IDTOUR` int NOT NULL,
+  `NOMBRE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDSCENE`),
+  KEY `IDX_7DD18D2E49E6CF4F` (`IDTOUR`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `servientrega`
+--
+
+CREATE TABLE IF NOT EXISTS `servientrega` (
+  `IDSERVIENTREGA` int NOT NULL AUTO_INCREMENT,
+  `N_PEDIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ID_CIUDAD_ENVIO` int DEFAULT NULL,
+  `CIUDAD_ENVIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_PRINCIPAL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_SECUNDARIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CODIGO_POSTAL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `UBICACION_REFENCIA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NOMBRE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `APELLIDO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DNI` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CELULAR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ID_CIUDAD_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CIUDAD_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_REMITE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NOMBRE_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `APELLIDO_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DNI_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CEDULA_VENDEDOR` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CODIGO_SERVIENTREGA` int DEFAULT NULL,
+  `MSJ_SERVIENTREGA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `PESO_TOTAL` double DEFAULT NULL,
+  `CANTIDAD_TOTAL` int DEFAULT NULL,
+  `VALOR_TOTAL` double DEFAULT NULL,
+  `PRODUCTOS` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `RESPONSE_SERVIENTREGA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDPEDIDO` int DEFAULT NULL,
+  `IDTIENDA` int DEFAULT NULL,
+  `VALOR_ASEGURADO` double DEFAULT NULL,
+  `FECHA_PEDIDO` datetime DEFAULT NULL,
+  `FECHA_REGISTRO` date DEFAULT NULL,
+  `EXCEL_GENERARO` tinyint(1) DEFAULT NULL,
+  `ID_METODOENVIO` int DEFAULT NULL,
+  `GUIA_ANULADA` tinyint(1) DEFAULT NULL,
+  `GUIA_OBSERVACION` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ARCHIVO` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`IDSERVIENTREGA`),
+  KEY `IDX_CF227D6E6662272E` (`IDPEDIDO`),
+  KEY `IDX_CF227D6E6248D4DE` (`IDTIENDA`),
+  KEY `IDX_CF227D6EBDB8FCAA` (`ID_METODOENVIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `shopby_info`
+--
+
+CREATE TABLE IF NOT EXISTS `shopby_info` (
+  `ID_INFO` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DESCRIPCION` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`ID_INFO`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `shopby_info`
+--
+
+INSERT INTO `shopby_info` (`ID_INFO`, `NOMBRE`, `DESCRIPCION`) VALUES
+(1, 'email', 'Soporte@shopby.com'),
+(2, 'dirección', 'Quito, Ecuador  Av. Amazonas y Río Palora'),
+(3, 'presentación', 'Shopby es una tienda online con los mejores descuentos, envío gratis y productos exclusivos en Ecuador, Compras en Linea de artículos baratos, ropa, zapatos, celulares, computadoras, skincare, shopby, tecnología, comprar, servicios, barata, deportes, juguetes, juegos, salud, Ecuador'),
+(4, 'teléfono', '0992972031'),
+(5, 'codigo_facturacion', 'INV0072');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sliders`
+--
+
+CREATE TABLE IF NOT EXISTS `sliders` (
+  `IDSLIDER` int NOT NULL AUTO_INCREMENT,
+  `MOBILE_SLIDER_URL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESKTOP_SLIDER_URL` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `HREF_SLIDER` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ORDER_SLIDER` int NOT NULL,
+  `IDTIENDA` int DEFAULT NULL,
+  `SLUG_PRODUCTO_DESTACADO` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDSLIDER`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `sliders`
+--
+
+INSERT INTO `sliders` (`IDSLIDER`, `MOBILE_SLIDER_URL`, `DESKTOP_SLIDER_URL`, `HREF_SLIDER`, `ORDER_SLIDER`, `IDTIENDA`, `SLUG_PRODUCTO_DESTACADO`) VALUES
+(25, 'uploads/sliders/banner mÃ³vil 5-b3debanner mÃ³vil 5.png', 'uploads/sliders/Banners principal 5_11zon-1a9fBanners principal 5_11zon.png', 'https://shopby.com.ec/tiendas-oficiales/Miinsecrets', 2, 531, 'power-station-1000w-bps-68791d7ba05fe'),
+(26, 'uploads/sliders/banner mÃ³vil 2-7721banner mÃ³vil 2.png', 'uploads/sliders/Banners principal 2_11zon-214bBanners principal 2_11zon.png', 'https://shopby.com.ec/tiendas-oficiales/fila', 3, 447, NULL),
+(27, 'uploads/sliders/banner mÃ³vil 3-67dbbanner mÃ³vil 3.png', 'uploads/sliders/Banners principal 3-da1dBanners principal 3.png', 'https://shopby.com.ec/tiendas-oficiales/hydroflask', 4, 63, NULL),
+(28, 'uploads/sliders/banner mÃ³vil 1-cc4bbanner mÃ³vil 1.png', 'uploads/sliders/Banners principal 1_11zon-31b8Banners principal 1_11zon.png', 'https://shopby.com.ec/tiendas-oficiales/upayana', 5, 67, NULL),
+(29, 'uploads/sliders/banner mÃ³vil 4-10985banner mÃ³vil 4.png', 'uploads/sliders/Banners principal 4-fb70Banners principal 4.png', 'https://shopby.com.ec/tiendas-oficiales/fullhome', 6, 69, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `subastas`
+--
+
+CREATE TABLE IF NOT EXISTS `subastas` (
+  `IDSUBASTA` int NOT NULL AUTO_INCREMENT,
+  `INICIO_SUBASTA` datetime NOT NULL,
+  `FIN_SUBASTA` datetime NOT NULL,
+  `VALOR_MINIMO` double NOT NULL,
+  `ACTIVO` tinyint(1) NOT NULL,
+  `IDPRODUCTO` int NOT NULL,
+  `IDVARIACION` int DEFAULT NULL,
+  `IDTIENDA` int NOT NULL,
+  PRIMARY KEY (`IDSUBASTA`),
+  KEY `IDX_875BF3A46F15327` (`IDPRODUCTO`),
+  KEY `IDX_875BF3A45C4D67D1` (`IDVARIACION`),
+  KEY `IDX_875BF3A46248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `subcategorias`
+--
+
+CREATE TABLE IF NOT EXISTS `subcategorias` (
+  `IDSUBCATEGORIA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_SUBCATEGORIA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDCATEGORIA` int NOT NULL,
+  `SUBCATEGORIA_SLUG` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SUBCATEGORIA_IMAGEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_CREACION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `FECHA_EDICION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (`IDSUBCATEGORIA`),
+  UNIQUE KEY `UNIQ_10E64CF8F68FBF3` (`SUBCATEGORIA_SLUG`),
+  KEY `IDX_10E64CFBD082930` (`IDCATEGORIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `subcategorias`
+--
+
+INSERT INTO `subcategorias` (`IDSUBCATEGORIA`, `NOMBRE_SUBCATEGORIA`, `IDCATEGORIA`, `SUBCATEGORIA_SLUG`, `SUBCATEGORIA_IMAGEN`, `FECHA_CREACION`, `FECHA_EDICION`) VALUES
+(3, 'Celulares', 1, 'celulares', 'celulares_12312.png', NULL, '2024-05-02 20:15:09'),
+(4, 'Computación', 1, 'computacin-65ce42e8ee43b', 'computacion_12904.png', NULL, NULL),
+(5, 'Accesorios', 1, 'accesorios-65ce42f5401a2', 'accesorios_1240.png', NULL, NULL),
+(6, 'Tablets', 1, 'tablets-65ce42fd6bf3b', 'tablets_558.png', NULL, NULL),
+(7, 'Audio y video', 1, 'audio-y-video-65ce4304adea0', 'video-equipment-rental-600x600.webp', NULL, NULL),
+(8, 'Software', 1, 'software-65ce430aae791', 'sofware_1230.png', NULL, NULL),
+(9, 'Maquillaje', 3, 'maquillaje-65ce40ecc4969', 'cosmetics-2611803_640.png', NULL, NULL),
+(10, 'Perfumes', 3, 'perfumes-65ce40f6a023f', 'perfumes.png', NULL, NULL),
+(11, 'Cuidado de piel', 3, 'cuidado-de-piel-65ce40ff7a61b', 'piel_13r.jpg', NULL, NULL),
+(13, 'Cuidado de cabello', 3, 'cuidado-de-cabello-65ce41136feb2', 'barba_24353.png', NULL, NULL),
+(14, 'Fajas Y Leggins', 3, 'fajas-y-leggins-65ce411f9262c', 'fajas.webp', NULL, NULL),
+(17, 'Otros', 1, 'otros-65ce430fec178', NULL, NULL, NULL),
+(18, 'Otros', 3, 'otros-65ce41248279b', NULL, NULL, NULL),
+(20, 'OTROS', 4, 'otros-4rvnn', NULL, NULL, NULL),
+(21, 'OTROS', 5, 'otros-23xxxq3', NULL, NULL, NULL),
+(23, 'OTROS', 8, 'otros-56sdbcn', NULL, NULL, NULL),
+(24, 'OTROS', 9, 'otros-34vvba', NULL, NULL, NULL),
+(25, 'OTROS', 10, 'otros-34bbs', NULL, NULL, NULL),
+(27, 'Otros', 12, 'otros', NULL, NULL, '2024-05-03 05:50:48'),
+(28, 'Juegos de agua', 11, 'juegos-de-agua-6596d3e3c04ea', NULL, NULL, NULL),
+(29, 'Alimentos', 6, 'alimentos-65aea36b44b1d', NULL, NULL, NULL),
+(30, 'Zapatos', 4, 'zapatos-65c3e60902285', NULL, NULL, NULL),
+(31, 'Accesorios de camping', 8, 'accesorios-de-camping-65c3e78b8c515', NULL, NULL, NULL),
+(32, 'Recipientes Térmicos', 8, 'recipientes-trmicos-65c3e79b19086', NULL, NULL, NULL),
+(33, 'Hidratación', 8, 'hidratacin-65c3fbee59043', NULL, NULL, NULL),
+(34, 'Cocina', 6, 'cocina-65c404aaaf742', NULL, NULL, NULL),
+(35, 'Vajillas', 6, 'vajillas-65c404f94d323', NULL, NULL, NULL),
+(36, 'Tazas', 6, 'tazas-65c4050b31917', NULL, NULL, NULL),
+(37, 'Termos', 8, 'termos-65c4f4c52305b', NULL, NULL, NULL),
+(38, 'Recipientes térmicos', 6, 'recipientes-trmicos-65c52be8da861', NULL, NULL, NULL),
+(39, 'Botellas', 8, 'botellas-65c52e316302d', NULL, NULL, NULL),
+(40, 'Almacenamiento y organización', 6, 'almacenamiento-y-organizacin-65ce36e0c4af9', NULL, NULL, NULL),
+(41, 'Cuidado de cabello', 4, 'cuidado-de-cabello-65ce3ee4a7695', NULL, NULL, NULL),
+(42, 'Accesorios', 4, 'accesorios-65ce3eea0f334', NULL, NULL, NULL),
+(43, 'Cabello', 4, 'cabello-65ce3eeecfdad', NULL, NULL, NULL),
+(44, 'Carteras', 4, 'carteras-65ce3fee96881', NULL, NULL, NULL),
+(45, 'Audìfonos', 1, 'audfonos-65ce431c3bcdb', NULL, NULL, NULL),
+(46, 'Muebles', 6, 'muebles-65ce44404500a', NULL, NULL, NULL),
+(47, 'Cobertores', 6, 'cobertores-65ce448e0acfe', NULL, NULL, NULL),
+(48, 'Accesorios de cocina', 6, 'accesorios-de-cocina-65ce4633ea3cc', NULL, NULL, NULL),
+(49, 'Electrodomésticos', 6, 'electrodomsticos-65ce47177f529', NULL, NULL, NULL),
+(50, 'Planchas', 6, 'planchas-65ce474ae7c20', NULL, NULL, NULL),
+(51, 'Periféricos', 1, 'perifricos-65ce484500280', NULL, NULL, NULL),
+(52, 'Teclados', 1, 'teclados-65ce4849ed7a8', NULL, NULL, NULL),
+(53, 'Mouse', 1, 'mouse-65ce4851250e4', NULL, NULL, NULL),
+(54, 'Suplementos', 3, 'suplementos-65de03ae5379c', NULL, NULL, NULL),
+(55, 'Gadgets', 1, 'gadgets-65e22a5f35f4f', NULL, NULL, NULL),
+(56, 'Muebles', 18, 'muebles-65eb299d63825', NULL, NULL, NULL),
+(57, 'Baño', 18, 'baño-65eb29b10db70', NULL, NULL, NULL),
+(58, 'Dormitorio', 18, 'dormitorio-65eb29c1f0c6b', NULL, NULL, NULL),
+(59, 'Cocina', 18, 'cocina-65eb29cdbf065', NULL, NULL, NULL),
+(60, 'Jardín', 18, 'jardín-65eb29e43a530', NULL, NULL, NULL),
+(61, 'Electrodomésticos', 18, 'electrodomsticos-65eb2a08da952', NULL, NULL, NULL),
+(62, 'Limpieza', 18, 'limpieza-65eb2a1635b03', NULL, NULL, NULL),
+(63, 'Patio y jardín', 18, 'patio-y-jardín-65eb2a33bab9e', NULL, NULL, NULL),
+(64, 'Decoración', 18, 'decoración-65eb2a3b5ef99', NULL, NULL, NULL),
+(65, 'Sala', 18, 'sala-65eb2a485a989', NULL, NULL, NULL),
+(66, 'Ciclismo', 8, 'ciclismo', NULL, NULL, NULL),
+(67, 'Herramientas', 12, 'herramientas', NULL, '2024-05-03 05:50:58', '2024-05-03 05:51:14'),
+(68, 'Juguetes', 5, 'juguetes', NULL, '2024-06-05 13:48:13', '2024-06-05 13:48:13'),
+(70, 'Aseo', 18, 'aseo', NULL, '2024-08-27 16:20:59', '2024-08-27 16:20:59'),
+(71, 'Salud', 18, 'salud', NULL, '2024-08-27 16:24:53', '2024-08-27 16:24:53'),
+(75, 'Salud', 8, 'salud_deporte', NULL, '2024-08-27 17:02:00', NULL),
+(76, 'Gadgets', 1, 'gadgets', NULL, '2024-12-13 15:17:45', '2024-12-13 15:17:45'),
+(77, 'deportivo  femenino', 4, 'deportivo--femenino', NULL, '2025-03-10 15:18:50', '2025-03-10 15:18:50'),
+(78, 'deportivo masculino', 4, 'deportivo-masculino', NULL, '2025-03-10 15:20:05', '2025-03-10 15:20:05'),
+(79, 'tennis', 8, 'tennis', NULL, '2025-03-10 15:33:07', '2025-03-10 15:33:07'),
+(80, 'unisex', 4, 'unisex', NULL, '2025-03-10 15:38:28', '2025-03-10 15:38:28'),
+(82, 'kids niño', 4, 'kids-niño', NULL, '2025-03-10 17:19:49', '2025-03-10 17:19:49'),
+(83, 'Educación', 64, 'educacion', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `subcategorias_tiendas`
+--
+
+CREATE TABLE IF NOT EXISTS `subcategorias_tiendas` (
+  `IDSUBCATEGORIATIENDA` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_SUBCATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IMAGEN_SUBCATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SLUG_SUBCATEGORIA_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FECHA_CREACION` datetime NOT NULL,
+  `FECHA_EDICION` datetime DEFAULT NULL,
+  `IDCATEGORIA_TIENDA` int NOT NULL,
+  PRIMARY KEY (`IDSUBCATEGORIATIENDA`),
+  UNIQUE KEY `UNIQ_75F280952A1CD635` (`SLUG_SUBCATEGORIA_TIENDA`),
+  KEY `IDX_75F280959EA5E911` (`IDCATEGORIA_TIENDA`)
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tarifas_servientrega`
+--
+
+CREATE TABLE IF NOT EXISTS `tarifas_servientrega` (
+  `IDTARIFAS_SERVIENTREGA` int NOT NULL AUTO_INCREMENT,
+  `TRAYECTOS_SERVIENTREGAS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `TARIFAS_SERVIENTREGA` double NOT NULL,
+  `TARIFA_DOS_KILOS` double DEFAULT NULL,
+  `TARIFA_KILO_ADICIONAL` double DEFAULT NULL,
+  `ID_METODOENVIO` int DEFAULT NULL,
+  PRIMARY KEY (`IDTARIFAS_SERVIENTREGA`),
+  KEY `IDX_716DA823BDB8FCAA` (`ID_METODOENVIO`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tarifas_servientrega`
+--
+
+INSERT INTO `tarifas_servientrega` (`IDTARIFAS_SERVIENTREGA`, `TRAYECTOS_SERVIENTREGAS`, `TARIFAS_SERVIENTREGA`, `TARIFA_DOS_KILOS`, `TARIFA_KILO_ADICIONAL`, `ID_METODOENVIO`) VALUES
+(1, 'Local', 1.51, 1.89, 0.36, 1),
+(2, 'Cantonal', 2.83, 3, 0.55, 1),
+(3, 'Provincial', 3.14, 3.33, 0.58, 1),
+(4, 'Regional', 3.5, 3.71, 0.73, 1),
+(5, 'Especial', 4.25, 4.51, 0.9, 1),
+(6, 'Galápagos(San Cristobal-Santa Cruz)', 11.5, 13.95, 3.5, 1),
+(8, 'Galápagos(Santa Isabela)', 12.9, 17.98, 4.75, 1),
+(9, 'Local', 3.02, 3.78, 0.72, 2),
+(10, 'Cantonal ', 5.66, 6, 1.1, 2),
+(11, 'Provincial', 6.28, 6.66, 1.16, 2),
+(12, 'Regional', 7, 7.42, 1.46, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `terminos`
+--
+
+CREATE TABLE IF NOT EXISTS `terminos` (
+  `IDTERMINOS` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE_TERMINO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `CODIGO_TERMINO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDATRIBUTO` int NOT NULL,
+  `FECHA_CREACION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  `FECHA_EDICION` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (`IDTERMINOS`),
+  KEY `IDX_9CF0353A478D32B8` (`IDATRIBUTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=207 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `terminos`
+--
+
+INSERT INTO `terminos` (`IDTERMINOS`, `NOMBRE_TERMINO`, `CODIGO_TERMINO`, `IDATRIBUTO`, `FECHA_CREACION`, `FECHA_EDICION`) VALUES
+(11, 'Blanco', '#FFFFFF', 1, NULL, NULL),
+(12, 'Negro', '#000000', 1, NULL, NULL),
+(13, 'Gris', '#808080', 1, NULL, NULL),
+(14, 'Azul', '#0000FF', 1, NULL, NULL),
+(15, 'Rojo', '#FF0000', 1, NULL, NULL),
+(16, 'Verde', '#008000', 1, NULL, NULL),
+(17, 'Amarillo', '#FFFF00', 1, NULL, NULL),
+(18, 'Marrón', '#A52A2A', 1, NULL, NULL),
+(19, 'Naranja', '#FFA500', 1, NULL, NULL),
+(20, 'Rosa', '#FFC0CB', 1, NULL, NULL),
+(21, '4 GB', NULL, 3, NULL, NULL),
+(22, '8 GB', NULL, 3, NULL, NULL),
+(24, '16 GB', NULL, 3, NULL, NULL),
+(25, '32 GB', NULL, 3, NULL, NULL),
+(26, '64 GB', NULL, 3, NULL, NULL),
+(27, '128 GB', NULL, 3, NULL, NULL),
+(28, '256 GB', NULL, 3, NULL, NULL),
+(29, '512 GB', NULL, 3, NULL, NULL),
+(30, '1 TB', NULL, 3, NULL, NULL),
+(31, '2 TB', NULL, 3, NULL, NULL),
+(32, '4 TB', NULL, 3, NULL, NULL),
+(33, 'Extra pequeño', 'XS', 2, NULL, NULL),
+(34, 'Pequeño', 'S', 2, NULL, NULL),
+(35, 'Mediano', 'M', 2, NULL, NULL),
+(36, 'Grande', 'L', 2, NULL, NULL),
+(37, 'Extra grande', 'XL', 2, NULL, '2024-05-02 22:07:45'),
+(38, 'Extra extra grande', 'XXL', 2, NULL, '2024-05-02 22:07:39'),
+(39, '6', NULL, 5, NULL, NULL),
+(40, '12', NULL, 5, NULL, NULL),
+(41, 'US5(EUR34)', '', 6, NULL, '2024-09-23 20:36:28'),
+(42, 'US6(EUR35.5)', '', 6, NULL, '2024-09-23 20:36:58'),
+(43, 'US6.5(EUR36)', '', 6, NULL, '2024-09-23 20:37:06'),
+(44, 'US7(EUR37)', '', 6, NULL, '2024-09-23 20:37:11'),
+(45, 'US8(EUR39)', '', 6, NULL, '2024-09-23 20:20:34'),
+(46, 'US9(EUR41)', '', 6, NULL, '2024-09-23 20:38:10'),
+(47, 'US9.5(EUR41.5)', '', 6, NULL, '2024-09-23 20:38:20'),
+(48, 'Nude', NULL, 1, NULL, NULL),
+(49, 'Sage', NULL, 1, NULL, NULL),
+(50, 'Violeta', NULL, 1, NULL, NULL),
+(51, 'Café', NULL, 1, NULL, NULL),
+(52, '42', NULL, 6, NULL, NULL),
+(53, '43', NULL, 6, NULL, NULL),
+(54, '44', NULL, 6, NULL, NULL),
+(55, '45', NULL, 6, NULL, NULL),
+(56, 'Stone', NULL, 1, NULL, NULL),
+(57, 'Indigo', NULL, 1, NULL, NULL),
+(58, 'Goji', NULL, 1, NULL, NULL),
+(59, 'Mesa', NULL, 1, NULL, NULL),
+(60, 'Agave', NULL, 1, NULL, NULL),
+(61, 'Pacific', NULL, 1, NULL, NULL),
+(62, 'Dew', NULL, 1, NULL, NULL),
+(63, 'Lupine', NULL, 1, NULL, NULL),
+(64, '20 oz', NULL, 7, NULL, NULL),
+(65, '32 oz', NULL, 7, NULL, NULL),
+(66, '40 oz', NULL, 7, NULL, NULL),
+(67, '64 oz', NULL, 7, NULL, NULL),
+(68, '24 oz', NULL, 7, NULL, NULL),
+(69, 'Dew', NULL, 1, NULL, NULL),
+(70, '12 oz', NULL, 7, NULL, NULL),
+(71, '16 oz', NULL, 7, NULL, NULL),
+(72, '18 oz', NULL, 7, NULL, NULL),
+(73, '21 oz', NULL, 7, NULL, NULL),
+(74, 'Cactus', NULL, 1, NULL, NULL),
+(75, '28 oz', NULL, 7, NULL, NULL),
+(76, 'Lake green', NULL, 1, NULL, NULL),
+(77, 'Onyx Gray', NULL, 1, NULL, NULL),
+(78, 'Morado', NULL, 1, NULL, NULL),
+(79, 'Plateado', NULL, 1, NULL, NULL),
+(80, 'Bronce', NULL, 1, NULL, NULL),
+(81, 'Night Sky', NULL, 1, NULL, NULL),
+(82, 'Cocoa Brown', NULL, 1, NULL, NULL),
+(83, 'Marine', NULL, 1, NULL, NULL),
+(84, 'Taupe', NULL, 1, NULL, NULL),
+(85, 'Black / Cognac', NULL, 1, NULL, NULL),
+(86, 'Sierra', '', 1, NULL, '2024-05-24 21:10:33'),
+(87, '18', '', 5, NULL, NULL),
+(89, '10Mts', '10mts', 29, NULL, '2024-07-24 20:02:50'),
+(90, '15Mts', '15mts', 29, NULL, NULL),
+(91, '20Mts', '20mts', 29, NULL, NULL),
+(92, '25Mts', '25mts', 29, NULL, NULL),
+(93, '30Mts', '30mts', 29, NULL, NULL),
+(94, '50Mts', '50mts', 29, NULL, NULL),
+(95, 'iPhone 12', '', 30, NULL, '2024-08-20 20:22:14'),
+(96, 'iPhone 11', '', 30, NULL, NULL),
+(97, 'iPhone 11 Pro', '', 30, NULL, '2024-08-20 20:23:13'),
+(98, 'iPhone 11 Pro Max', '', 30, NULL, '2024-08-20 20:23:19'),
+(99, 'iPhone 12 Pro', '', 30, NULL, NULL),
+(100, 'iPhone 12 Pro Max', '', 30, NULL, NULL),
+(101, 'iPhone 13', '', 30, NULL, NULL),
+(102, 'iPhone 13 Pro', '', 30, NULL, '2024-08-20 20:23:56'),
+(103, 'iPhone 13 Pro Max', '', 30, NULL, NULL),
+(104, 'iPhone 14', '', 30, NULL, NULL),
+(105, 'iPhone 14 Pro', '', 30, NULL, '2024-08-20 20:24:26'),
+(106, 'iPhone 14 Pro Max', '', 30, NULL, NULL),
+(107, 'iPhone 15', '', 30, NULL, NULL),
+(108, 'iPhone 15 Pro', '', 30, NULL, NULL),
+(109, 'iPhone 15 Pro Max', '', 30, NULL, NULL),
+(110, 'Hawaiian Cactus', '', 30, NULL, NULL),
+(111, 'Sequin Hat Cactus', '', 30, NULL, NULL),
+(112, 'Purple Hat Glasses', '', 30, NULL, NULL),
+(113, 'Red Scarf Cactus', '', 30, NULL, NULL),
+(114, '1.5Mts', '', 29, NULL, '2024-09-06 17:29:30'),
+(115, '2Mts', '', 29, NULL, NULL),
+(116, '7.5', '', 6, NULL, NULL),
+(126, '5', '', 32, NULL, NULL),
+(127, '5.5', '', 32, NULL, NULL),
+(128, '6', '', 32, NULL, NULL),
+(129, '6.5', '', 32, NULL, NULL),
+(130, '7', '', 32, NULL, NULL),
+(131, '7.5', '', 32, NULL, NULL),
+(132, '8', '', 32, NULL, NULL),
+(133, '8.5', '', 32, NULL, NULL),
+(134, '9', '', 32, NULL, NULL),
+(135, '9.5', '', 32, NULL, NULL),
+(136, '10', '', 32, NULL, NULL),
+(137, '10.5', '', 32, NULL, NULL),
+(138, '11', '', 32, NULL, NULL),
+(139, '11.5', '', 32, NULL, NULL),
+(140, '12', '', 32, NULL, NULL),
+(141, '12.5', '', 32, NULL, NULL),
+(142, 'US5.5(EUR35)', '', 6, NULL, NULL),
+(143, 'US7.5(EUR38)', '', 6, NULL, NULL),
+(144, 'US8.5(EUR40)', '', 6, NULL, NULL),
+(145, 'US10(EUR42)', '', 6, NULL, NULL),
+(146, 'US10.5(EUR43)', '', 6, NULL, NULL),
+(147, 'US11(EUR44)', '', 6, NULL, NULL),
+(148, 'US12(EUR45.5)', '', 6, NULL, NULL),
+(149, 'US13(EUR47)', '', 6, NULL, NULL),
+(150, 'US14(EUR48.5)', '', 6, NULL, NULL),
+(151, 'US15(EUR50)', '', 6, NULL, NULL),
+(152, 'US4.5(EUR33)', '', 6, NULL, '2024-09-23 21:34:03'),
+(153, 'NEGRO/CORAL/MUSGO', '', 1, NULL, NULL),
+(154, 'Gris / Celeste / Musgo', '', 1, NULL, NULL),
+(155, 'Azul / Rojo / Blanco', '', 1, NULL, NULL),
+(156, 'Blanco / Rosado / Celeste', '', 1, NULL, NULL),
+(157, '25.5', '', 33, NULL, NULL),
+(158, '26.5', '', 33, NULL, NULL),
+(159, '27.5', '', 33, NULL, NULL),
+(160, '28', '', 33, NULL, NULL),
+(161, '29.5', '', 33, NULL, NULL),
+(162, '30.5', '', 33, NULL, NULL),
+(163, '31.5', '', 33, NULL, NULL),
+(164, '32', '', 33, NULL, NULL),
+(165, '33.5', '', 33, NULL, '2024-10-15 15:30:42'),
+(166, '34.5', '', 33, NULL, NULL),
+(167, '35.5', '', 33, NULL, NULL),
+(168, '36.5', '', 33, NULL, NULL),
+(169, 'Hombre', '', 34, NULL, NULL),
+(170, 'Mujer', '', 34, NULL, NULL),
+(172, '1 ', '', 35, NULL, NULL),
+(173, '2 ', '', 35, NULL, NULL),
+(174, '3 ', '', 35, NULL, NULL),
+(175, '4 ', '', 35, NULL, NULL),
+(176, '5 ', '', 35, NULL, NULL),
+(177, '6 ', '', 35, NULL, NULL),
+(178, '7 ', '', 35, NULL, NULL),
+(179, '8 ', '', 35, NULL, NULL),
+(180, '9 ', '', 35, NULL, NULL),
+(181, '10', '', 35, NULL, NULL),
+(182, '11', '', 35, NULL, NULL),
+(183, '12 ', '', 35, NULL, NULL),
+(184, '1 ', '', 36, NULL, NULL),
+(185, '2 ', '', 36, NULL, NULL),
+(186, '3 ', '', 36, NULL, NULL),
+(187, '4 ', '', 36, NULL, NULL),
+(188, '5 ', '', 36, NULL, NULL),
+(189, '6 ', '', 36, NULL, NULL),
+(190, '7 ', '', 36, NULL, NULL),
+(191, '8 ', '', 36, NULL, NULL),
+(192, '9 ', '', 36, NULL, NULL),
+(193, '10', '', 36, NULL, NULL),
+(194, '11', '', 36, NULL, NULL),
+(195, '12', '', 36, NULL, NULL),
+(196, 'S ', '123', 38, NULL, NULL),
+(197, 'M ', '1234', 38, NULL, NULL),
+(198, 'L ', '12345', 38, NULL, NULL),
+(199, 'XL', '1234567', 38, NULL, NULL),
+(200, 'XXL', '1234567', 38, NULL, NULL),
+(201, 'XXXL', '12345678', 38, NULL, NULL),
+(202, 'Medida 1', '', 39, NULL, NULL),
+(203, '25 Pies (7.62 Mtrs)', '', 29, NULL, '2024-12-27 16:49:21'),
+(204, '50 Pies (15.24 Mtrs)', '', 29, NULL, NULL),
+(205, '75 Pies (22.86 Mtrs)', '', 29, NULL, NULL),
+(206, '100 Pies (30.48 Mtrs)', '', 29, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tiendas`
+--
+
+CREATE TABLE IF NOT EXISTS `tiendas` (
+  `IDTIENDA` int NOT NULL AUTO_INCREMENT,
+  `SLUG_TIENDA` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DESCRIPCION_TIENDA` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `COVER_TIENDA` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `META_TIENDA` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `CELULAR_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TELEFONO_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EMAIL_TIENDA` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VISIBILIDAD_TIENDA` tinyint(1) DEFAULT NULL,
+  `CIRUC_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDESTADO` int NOT NULL,
+  `NOMBRE_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `MAIN_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `COMISION_SHOPBY` int DEFAULT NULL,
+  `CONTACTO_TIENDA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIENDA_VISIBLE` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`IDTIENDA`),
+  UNIQUE KEY `UNIQ_DAAF144543485913` (`IDLOGIN`),
+  UNIQUE KEY `UNIQ_DAAF144541A1386F` (`SLUG_TIENDA`),
+  KEY `IDX_DAAF144584D3D003` (`IDESTADO`)
+) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `token`
+--
+
+CREATE TABLE IF NOT EXISTS `token` (
+  `IDTOKEN` int NOT NULL AUTO_INCREMENT,
+  `CODIGO_TOKEN` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_TOKEN` datetime DEFAULT NULL,
+  `VENCIMIENTO_TOKEN` datetime DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  PRIMARY KEY (`IDTOKEN`),
+  KEY `IDX_5F37A13B43485913` (`IDLOGIN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `IDUSUARIO` int NOT NULL AUTO_INCREMENT,
+  `DNI_USUARIO` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `EMAIL_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NOMBRE_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `APELLIDO_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TELEFONO_USUARIO` int DEFAULT NULL,
+  `CELULAR_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `AVATAR_USUARIO` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `GEO_USUARIO` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SELFIE_USUARIO` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `TIPO_DOCUMENTO_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `GENERO_USUARIO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDLOGIN` int NOT NULL,
+  `IDPAIS` int NOT NULL,
+  `IDESTADO` int DEFAULT NULL,
+  `FECHA_NACIMIENTO_USUARIO` date DEFAULT NULL,
+  `USERNAME` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `USARIO_DOCUMENTO` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `USUARIO_HAS_VERIFIED` tinyint(1) DEFAULT NULL,
+  `LIMITE_BIOMETRICO` int DEFAULT NULL,
+  `FECHA_BIOMETRICO` datetime DEFAULT NULL,
+  `MINIMUM_PURCHASE_BIOMETRIC` int DEFAULT '500',
+  `USUARIO_REQUIERE_BIOMETRICO` tinyint(1) DEFAULT NULL,
+  `DEFAULT_REFERIDO` double DEFAULT '10',
+  PRIMARY KEY (`IDUSUARIO`),
+  UNIQUE KEY `UNIQ_EF687F243485913` (`IDLOGIN`),
+  UNIQUE KEY `UNIQ_EF687F2409FB821` (`EMAIL_USUARIO`),
+  UNIQUE KEY `UNIQ_EF687F2F31E299D` (`DNI_USUARIO`),
+  UNIQUE KEY `UNIQ_EF687F2D5BD3A8B` (`TELEFONO_USUARIO`),
+  UNIQUE KEY `UNIQ_EF687F2B7647026` (`CELULAR_USUARIO`),
+  UNIQUE KEY `UNIQ_EF687F23E6D9A3B` (`USERNAME`),
+  KEY `IDX_EF687F25D6A18D9` (`IDPAIS`),
+  KEY `IDX_EF687F284D3D003` (`IDESTADO`)
+) ENGINE=InnoDB AUTO_INCREMENT=821 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios_direcciones`
+--
+
+CREATE TABLE IF NOT EXISTS `usuarios_direcciones` (
+  `IDUSUARIOS_DIRECCIONES` int NOT NULL AUTO_INCREMENT,
+  `DIRECCION_P` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DIRECCION_S` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `CODIGO_POSTAL` int DEFAULT NULL,
+  `ETIQUETA_DIRECCION` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `REFERENCIA_DIRECCION` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `FECHA_DIRECCION` datetime DEFAULT NULL,
+  `DEFAULT_DIRECCION` int DEFAULT NULL,
+  `NUMERO_CASA` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDUSUARIO` int NOT NULL,
+  `IDCIUDAD` int NOT NULL,
+  `IDESTADO` int NOT NULL,
+  `LATITUD` double DEFAULT NULL,
+  `LONGITUD` double DEFAULT NULL,
+  `OBSERVACION_DIRECCION` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDUSUARIOS_DIRECCIONES`),
+  KEY `IDX_CDF17BEEB9A3FCDC` (`IDUSUARIO`),
+  KEY `IDX_CDF17BEE2C08347E` (`IDCIUDAD`),
+  KEY `IDX_CDF17BEE84D3D003` (`IDESTADO`)
+) ENGINE=InnoDB AUTO_INCREMENT=474 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `variaciones`
+--
+
+CREATE TABLE IF NOT EXISTS `variaciones` (
+  `IDVARIACION` int NOT NULL AUTO_INCREMENT,
+  `IDPRODUCTO` int NOT NULL,
+  `DESCRIPCION_VARIACION` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `PRECIO_VARIACION` double DEFAULT NULL,
+  `PRECIO_REBAJADO_VARIACION` double DEFAULT NULL,
+  `CANTIDAD_VARIACION` int DEFAULT NULL,
+  `SKU_VARIACIONES` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `VARIANTE_DISPONIBILIDAD` tinyint(1) DEFAULT NULL,
+  `CODIGO_VARIANTE` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IDVARIACION`),
+  UNIQUE KEY `UNIQ_95CD875312F25CCB` (`CODIGO_VARIANTE`),
+  KEY `IDX_95CD87536F15327` (`IDPRODUCTO`)
+) ENGINE=InnoDB AUTO_INCREMENT=1044 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `variaciones_galeria`
+--
+
+CREATE TABLE IF NOT EXISTS `variaciones_galeria` (
+  `IDVARIACION_GALERIA` int NOT NULL AUTO_INCREMENT,
+  `URL_VARIACION_GALERIA` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDVARIACION` int NOT NULL,
+  PRIMARY KEY (`IDVARIACION_GALERIA`),
+  KEY `IDX_CFD0B5A75C4D67D1` (`IDVARIACION`)
+) ENGINE=InnoDB AUTO_INCREMENT=1661 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `variaciones_terminos`
+--
+
+CREATE TABLE IF NOT EXISTS `variaciones_terminos` (
+  `IDVARIACION` int NOT NULL,
+  `IDTERMINOS` int NOT NULL,
+  PRIMARY KEY (`IDVARIACION`,`IDTERMINOS`),
+  KEY `IDX_4070F8915C4D67D1` (`IDVARIACION`),
+  KEY `IDX_4070F8913DBA6008` (`IDTERMINOS`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `ventas_aprovadas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `ventas_aprovadas` (
+`CELULAR_CLIENTE` varchar(255)
+,`CIUDAD_CLIENTE` varchar(255)
+,`CODIGO_POSTAL_CLIENTE` varchar(255)
+,`COMISION_PAYPAL` double
+,`DIRECCION_PRINCIPAL_PEDIDO` varchar(255)
+,`DIRECCION_SECUNDARIA_PEDIDO` varchar(255)
+,`DNI_CLIENTE` varchar(255)
+,`ESTADO_PAGO` varchar(255)
+,`FECHA_PEDIDO` datetime
+,`IDCUPON` int
+,`IDESTADO_ENVIO` int
+,`IDESTADO_RETIRO` int
+,`IDPEDIDO` int
+,`IVA_ENVIO` double
+,`METODO_ENVIO` varchar(255)
+,`METODOPAGO` varchar(255)
+,`N_VENTA` varchar(255)
+,`NOMBRE_CLIENTE` varchar(255)
+,`NOMBRE_TIENDA` varchar(255)
+,`NUMERO_PEDIDO` varchar(255)
+,`PEDIDO_AUTORIZACION` varchar(255)
+,`PEDIDO_COSTO_ENVIO` double
+,`PEDIDO_DESCUENTO_CUPON` double
+,`PEDIDO_IVA` double
+,`PEDIDO_SUBTOTAL` double
+,`PEDIDO_TOTAL_FINAL` double
+,`PROVINCIA_CLIENTE` varchar(255)
+,`REFERENCIA_PEDIDO` varchar(255)
+,`REGION_CLIENTE` varchar(255)
+,`SUBTOTAL_ENVIO` double
+,`SUBTOTAL_MAS_IVA` double
+,`SUBTOTAL_ORIGINAL` double
+,`TIPO_ENVIO` varchar(255)
+,`UBICACION_REFERENCIA_PEDIDO` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `ventas_concretadas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `ventas_concretadas` (
+`CELULAR_CLIENTE` varchar(255)
+,`CIUDAD_CLIENTE` varchar(255)
+,`CLAVE_FACTURADOR` varchar(255)
+,`CODIGO_POSTAL_CLIENTE` varchar(255)
+,`COMISION_PAYPAL` double
+,`DIRECCION_PRINCIPAL_PEDIDO` varchar(255)
+,`DIRECCION_SECUNDARIA_PEDIDO` varchar(255)
+,`DNI_CLIENTE` varchar(255)
+,`ESTADO_PAGO` varchar(255)
+,`FECHA_PAGO` datetime
+,`FECHA_PEDIDO` datetime
+,`IDCUPON` int
+,`IDPEDIDO` int
+,`IVA_ENVIO` double
+,`METODO_ENVIO` varchar(255)
+,`METODOPAGO` varchar(255)
+,`N_VENTA` varchar(255)
+,`NOMBRE_CLIENTE` varchar(255)
+,`NOMBRE_TIENDA` varchar(255)
+,`NUMERO_PEDIDO` varchar(255)
+,`PEDIDO_AUTORIZACION` varchar(255)
+,`PEDIDO_COSTO_ENVIO` double
+,`PEDIDO_DESCUENTO_CUPON` double
+,`PEDIDO_IVA` double
+,`PEDIDO_SUBTOTAL` double
+,`PEDIDO_TOTAL_FINAL` double
+,`PROVINCIA_CLIENTE` varchar(255)
+,`REFERENCIA_PEDIDO` varchar(255)
+,`REGION_CLIENTE` varchar(255)
+,`SUBTOTAL_ENVIO` double
+,`SUBTOTAL_MAS_IVA` double
+,`TIPO_ENVIO` varchar(255)
+,`UBICACION_REFERENCIA_PEDIDO` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `virtual_tour`
+--
+
+CREATE TABLE IF NOT EXISTS `virtual_tour` (
+  `IDTOUR` int NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IDTIENDA` int NOT NULL,
+  PRIMARY KEY (`IDTOUR`),
+  KEY `IDX_8359E4516248D4DE` (`IDTIENDA`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vistapedidosporusuario`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `vistapedidosporusuario` (
+`APELLIDO_USUARIO` varchar(255)
+,`CANTIDAD_PEDIDOS` bigint
+,`CELULAR_USUARIO` varchar(255)
+,`DNI_USUARIO` varchar(30)
+,`EMAIL_LOGIN` varchar(255)
+,`NOMBRE_USUARIO` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vista_productos_activos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `vista_productos_activos` (
+`CANTIDAD_PRODUCTO` int
+,`CATEGORIAS` text
+,`NOMBRE_PRODUCTO` varchar(250)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vista_ventas_tiendas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE IF NOT EXISTS `vista_ventas_tiendas` (
+`ESTADO` varchar(45)
+,`GANANCIA` double
+,`IDTIENDA` int
+,`NOMBRE_TIENDA` varchar(255)
+,`USUARIO_LOGIN` varchar(500)
+,`ventas_totales` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `lista_productos_detallados`
+--
+DROP TABLE IF EXISTS `lista_productos_detallados`;
+
+CREATE VIEW `lista_productos_detallados`  AS SELECT `p`.`IDPRODUCTO` AS `IDPRODUCTO`, `p`.`NOMBRE_PRODUCTO` AS `NOMBRE_PRODUCTO`, `p`.`DESCRIPCION_CORTA_PRODUCTO` AS `DESCRIPCION_CORTA_PRODUCTO`, `p`.`DESCRIPCION_LARGA_PRODUCTO` AS `DESCRIPCION_LARGA_PRODUCTO`, `p`.`IMAGEN_PRODUCTO` AS `IMAGEN_PRODUCTO`, `p`.`CANTIDAD_PRODUCTO` AS `CANTIDAD_PRODUCTO`, `p`.`SLUG_PRODUCTO` AS `SLUG_PRODUCTO`, `p`.`PRECIO_NORMAL_PRODUCTO` AS `PRECIO_NORMAL_PRODUCTO`, `p`.`PRECIO_REBAJADO_PRODUCTO` AS `PRECIO_REBAJADO_PRODUCTO`, `p`.`EAN_PRODUCTO` AS `EAN_PRODUCTO`, `p`.`SKU_PRODUCTO` AS `SKU_PRODUCTO`, `p`.`VIDEO_PRODUCTO` AS `VIDEO_PRODUCTO`, `p`.`META_PRODUCTO` AS `META_PRODUCTO`, `p`.`GARANTIA_PRODUCTO` AS `GARANTIA_PRODUCTO`, `p`.`REGATEO_PRODUCTO` AS `REGATEO_PRODUCTO`, `p`.`ETIQUETAS_PRODUCTO` AS `ETIQUETAS_PRODUCTO`, `p`.`FECHA_REGISTRO_PRODUCTO` AS `FECHA_REGISTRO_PRODUCTO`, `p`.`IDTIENDA` AS `IDTIENDA`, `p`.`IDESTADO` AS `IDESTADO`, `p`.`IDTIPO_VENTA` AS `IDTIPO_VENTA`, `p`.`IDTIPO_PRODUCTO` AS `IDTIPO_PRODUCTO`, `p`.`IDENTRAGAS_TIPO` AS `IDENTRAGAS_TIPO`, `p`.`IDMARCA` AS `IDMARCA`, `p`.`IDUSUARIOS_DIRECCIONES` AS `IDUSUARIOS_DIRECCIONES`, `p`.`FECHA_EDICION_PRODUCTO` AS `FECHA_EDICION_PRODUCTO`, `p`.`PRODUCTO_VARIABLE` AS `PRODUCTO_VARIABLE`, `p`.`FICHA_TECNICA_PRODUCTO` AS `FICHA_TECNICA_PRODUCTO`, `p`.`PRODUCTO_DISPONIBILIDAD` AS `PRODUCTO_DISPONIBILIDAD`, `p`.`LARGO_PRODUCTO` AS `LARGO_PRODUCTO`, `p`.`ANCHO_PROODUCTO` AS `ANCHO_PROODUCTO`, `p`.`ALTO_PRODUCTO` AS `ALTO_PRODUCTO`, `p`.`PRODUCTO_TIENE_IVA` AS `PRODUCTO_TIENE_IVA`, `p`.`PRODUCTO_INCLUIDO_IMPUESTOS` AS `PRODUCTO_INCLUIDO_IMPUESTOS`, `p`.`PESO_PRODUCTO` AS `PESO_PRODUCTO`, `p`.`TIENE_DESCUENTO` AS `TIENE_DESCUENTO`, `p`.`PRODUCTO_SUSPENDIDO` AS `PRODUCTO_SUSPENDIDO`, `p`.`PRODUCTO_BORRADOR` AS `PRODUCTO_BORRADOR`, `p`.`FROM_FORM` AS `FROM_FORM`, `p`.`COBRO_SERVICIO` AS `COBRO_SERVICIO`, `p`.`TIPO_SERVICIO` AS `TIPO_SERVICIO`, `p`.`IDCIUDAD` AS `IDCIUDAD`, `p`.`TIEMPO_ENTREGA` AS `TIEMPO_ENTREGA`, `p`.`CODIGO_PRODUCTO` AS `CODIGO_PRODUCTO`, coalesce(group_concat(distinct concat(`attr_group`.`NOMBRE_ATRIBUTO`,': ',`attr_group`.`terminos`) order by `attr_group`.`NOMBRE_ATRIBUTO` ASC separator '; '),'') AS `atributos` FROM (`productos` `p` left join (select `v`.`IDPRODUCTO` AS `IDPRODUCTO`,`a`.`NOMBRE_ATRIBUTO` AS `NOMBRE_ATRIBUTO`,group_concat(distinct `t`.`NOMBRE_TERMINO` order by `t`.`NOMBRE_TERMINO` ASC separator ', ') AS `terminos` from (((`variaciones` `v` join `variaciones_terminos` `vt` on((`v`.`IDVARIACION` = `vt`.`IDVARIACION`))) join `terminos` `t` on((`vt`.`IDTERMINOS` = `t`.`IDTERMINOS`))) join `atributos` `a` on((`t`.`IDATRIBUTO` = `a`.`IDATRIBUTO`))) group by `v`.`IDPRODUCTO`,`a`.`IDATRIBUTO`) `attr_group` on((`p`.`IDPRODUCTO` = `attr_group`.`IDPRODUCTO`))) GROUP BY `p`.`IDPRODUCTO` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `productos_mas_vendidos`
+--
+DROP TABLE IF EXISTS `productos_mas_vendidos`;
+
+CREATE VIEW `productos_mas_vendidos`  AS SELECT `p`.`IDPRODUCTO` AS `IDPRODUCTO`, `p`.`NOMBRE_PRODUCTO` AS `NOMBRE_PRODUCTO`, `t`.`NOMBRE_TIENDA` AS `NOMBRE_TIENDA`, sum(`dp`.`CANTIDAD`) AS `tota_cantidad`, sum(`p2`.`PEDIDO_SUBTOTAL`) AS `ganancia`, count(distinct `p2`.`IDPEDIDO`) AS `tota_pedidos`, `p`.`CANTIDAD_PRODUCTO` AS `stock_producto`, (select group_concat(`c`.`NOMBRE_CATEGORIA` order by `c`.`NOMBRE_CATEGORIA` ASC separator ', ') from (`categorias` `c` join `productos_categorias` `pc` on((`c`.`IDCATEGORIA` = `pc`.`IDCATEGORIA`))) where (`pc`.`IDPRODUCTO` = `p`.`IDPRODUCTO`)) AS `categorias` FROM (((`productos` `p` join `detalle_pedido` `dp` on((`p`.`IDPRODUCTO` = `dp`.`IDPRODUCTO`))) join `pedidos` `p2` on((`dp`.`IDPEDIDO` = `p2`.`IDPEDIDO`))) join `tiendas` `t` on((`t`.`IDTIENDA` = `p`.`IDTIENDA`))) WHERE ((`p2`.`ESTADO_PAGO` = 'APPROVED') AND (`p2`.`UBICACION_REFERENCIA_PEDIDO` <> 'PRUEBA') AND (`p2`.`PROVINCIA_CLIENTE` <> '') AND (`p2`.`REGION_CLIENTE` <> '') AND (`p2`.`PEDIDO_SUBTOTAL` <> '') AND (`p2`.`PEDIDO_IVA` <> '') AND (`p2`.`SUBTOTAL_MAS_IVA` <> '') AND (`p2`.`PEDIDO_TOTAL_FINAL` <> '') AND (((`p2`.`IDESTADO_ENVIO` = 22) AND (`p2`.`IDESTADO_RETIRO` = 22)) OR (`p2`.`IDESTADO_ENVIO` = 22) OR (`p2`.`IDESTADO_RETIRO` = 22))) GROUP BY `p`.`IDPRODUCTO`, `p`.`NOMBRE_PRODUCTO`, `t`.`NOMBRE_TIENDA` ORDER BY sum(`dp`.`CANTIDAD`) DESC ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `ventas_aprovadas`
+--
+DROP TABLE IF EXISTS `ventas_aprovadas`;
+
+CREATE VIEW `ventas_aprovadas`  AS SELECT `p`.`IDPEDIDO` AS `IDPEDIDO`, `p`.`FECHA_PEDIDO` AS `FECHA_PEDIDO`, `p`.`NOMBRE_CLIENTE` AS `NOMBRE_CLIENTE`, `p`.`DNI_CLIENTE` AS `DNI_CLIENTE`, `p`.`CELULAR_CLIENTE` AS `CELULAR_CLIENTE`, `p`.`CODIGO_POSTAL_CLIENTE` AS `CODIGO_POSTAL_CLIENTE`, `p`.`CIUDAD_CLIENTE` AS `CIUDAD_CLIENTE`, `p`.`NUMERO_PEDIDO` AS `NUMERO_PEDIDO`, `p`.`REFERENCIA_PEDIDO` AS `REFERENCIA_PEDIDO`, `p`.`PEDIDO_AUTORIZACION` AS `PEDIDO_AUTORIZACION`, `p`.`DIRECCION_PRINCIPAL_PEDIDO` AS `DIRECCION_PRINCIPAL_PEDIDO`, `p`.`DIRECCION_SECUNDARIA_PEDIDO` AS `DIRECCION_SECUNDARIA_PEDIDO`, `p`.`UBICACION_REFERENCIA_PEDIDO` AS `UBICACION_REFERENCIA_PEDIDO`, `p`.`ESTADO_PAGO` AS `ESTADO_PAGO`, `p`.`IDESTADO_ENVIO` AS `IDESTADO_ENVIO`, `p`.`IDESTADO_RETIRO` AS `IDESTADO_RETIRO`, `p`.`TIPO_ENVIO` AS `TIPO_ENVIO`, `p`.`N_VENTA` AS `N_VENTA`, `mp`.`METODOPAGO` AS `METODOPAGO`, `p`.`IDCUPON` AS `IDCUPON`, `p`.`PROVINCIA_CLIENTE` AS `PROVINCIA_CLIENTE`, `p`.`REGION_CLIENTE` AS `REGION_CLIENTE`, `t`.`NOMBRE_TIENDA` AS `NOMBRE_TIENDA`, `me`.`METODO_ENVIO` AS `METODO_ENVIO`, `p`.`PEDIDO_SUBTOTAL` AS `PEDIDO_SUBTOTAL`, `p`.`PEDIDO_IVA` AS `PEDIDO_IVA`, `p`.`SUBTOTAL_MAS_IVA` AS `SUBTOTAL_MAS_IVA`, `p`.`SUBTOTAL_ENVIO` AS `SUBTOTAL_ENVIO`, `p`.`IVA_ENVIO` AS `IVA_ENVIO`, `p`.`PEDIDO_COSTO_ENVIO` AS `PEDIDO_COSTO_ENVIO`, `p`.`COMISION_PAYPAL` AS `COMISION_PAYPAL`, `p`.`PEDIDO_TOTAL_FINAL` AS `PEDIDO_TOTAL_FINAL`, `p`.`PEDIDO_DESCUENTO_CUPON` AS `PEDIDO_DESCUENTO_CUPON`, `p`.`SUBTOTAL_ORIGINAL` AS `SUBTOTAL_ORIGINAL` FROM (((`pedidos` `p` join `tiendas` `t` on((`t`.`IDTIENDA` = `p`.`IDTIENDA`))) join `metodos_envio` `me` on((`me`.`ID_METODOENVIO` = `p`.`ID_METODOENVIO`))) join `metodos_pago` `mp` on((`mp`.`IDMETODOPAGO` = `p`.`IDMETODOPAGO`))) WHERE ((`p`.`ESTADO_PAGO` = 'APPROVED') AND (`p`.`UBICACION_REFERENCIA_PEDIDO` <> 'PRUEBA') AND (`p`.`PROVINCIA_CLIENTE` <> '') AND (`p`.`REGION_CLIENTE` <> '') AND ((`p`.`PEDIDO_SUBTOTAL` <> '') OR (`p`.`PEDIDO_SUBTOTAL` <> 0)) AND ((`p`.`PEDIDO_IVA` <> '') OR (`p`.`PEDIDO_IVA` <> 0)) AND ((`p`.`SUBTOTAL_MAS_IVA` <> '') OR (`p`.`SUBTOTAL_MAS_IVA` <> 0)) AND ((`p`.`PEDIDO_TOTAL_FINAL` <> '') OR (`p`.`PEDIDO_TOTAL_FINAL` <> 0))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `ventas_concretadas`
+--
+DROP TABLE IF EXISTS `ventas_concretadas`;
+
+CREATE VIEW `ventas_concretadas`  AS SELECT `p`.`IDPEDIDO` AS `IDPEDIDO`, `p`.`FECHA_PEDIDO` AS `FECHA_PEDIDO`, `p`.`NOMBRE_CLIENTE` AS `NOMBRE_CLIENTE`, `p`.`DNI_CLIENTE` AS `DNI_CLIENTE`, `p`.`CELULAR_CLIENTE` AS `CELULAR_CLIENTE`, `p`.`CODIGO_POSTAL_CLIENTE` AS `CODIGO_POSTAL_CLIENTE`, `p`.`CIUDAD_CLIENTE` AS `CIUDAD_CLIENTE`, `p`.`NUMERO_PEDIDO` AS `NUMERO_PEDIDO`, `p`.`REFERENCIA_PEDIDO` AS `REFERENCIA_PEDIDO`, `p`.`PEDIDO_AUTORIZACION` AS `PEDIDO_AUTORIZACION`, `p`.`DIRECCION_PRINCIPAL_PEDIDO` AS `DIRECCION_PRINCIPAL_PEDIDO`, `p`.`DIRECCION_SECUNDARIA_PEDIDO` AS `DIRECCION_SECUNDARIA_PEDIDO`, `p`.`UBICACION_REFERENCIA_PEDIDO` AS `UBICACION_REFERENCIA_PEDIDO`, `p`.`ESTADO_PAGO` AS `ESTADO_PAGO`, `p`.`TIPO_ENVIO` AS `TIPO_ENVIO`, `p`.`N_VENTA` AS `N_VENTA`, `mp`.`METODOPAGO` AS `METODOPAGO`, `p`.`FECHA_PAGO` AS `FECHA_PAGO`, `p`.`IDCUPON` AS `IDCUPON`, `p`.`PROVINCIA_CLIENTE` AS `PROVINCIA_CLIENTE`, `p`.`REGION_CLIENTE` AS `REGION_CLIENTE`, `t`.`NOMBRE_TIENDA` AS `NOMBRE_TIENDA`, `me`.`METODO_ENVIO` AS `METODO_ENVIO`, `p`.`PEDIDO_SUBTOTAL` AS `PEDIDO_SUBTOTAL`, `p`.`PEDIDO_IVA` AS `PEDIDO_IVA`, `p`.`SUBTOTAL_MAS_IVA` AS `SUBTOTAL_MAS_IVA`, `p`.`SUBTOTAL_ENVIO` AS `SUBTOTAL_ENVIO`, `p`.`IVA_ENVIO` AS `IVA_ENVIO`, `p`.`PEDIDO_COSTO_ENVIO` AS `PEDIDO_COSTO_ENVIO`, `p`.`COMISION_PAYPAL` AS `COMISION_PAYPAL`, `p`.`PEDIDO_TOTAL_FINAL` AS `PEDIDO_TOTAL_FINAL`, `p`.`PEDIDO_DESCUENTO_CUPON` AS `PEDIDO_DESCUENTO_CUPON`, `p`.`CLAVE_FACTURADOR` AS `CLAVE_FACTURADOR` FROM (((`pedidos` `p` join `tiendas` `t` on((`t`.`IDTIENDA` = `p`.`IDTIENDA`))) join `metodos_envio` `me` on((`me`.`ID_METODOENVIO` = `p`.`ID_METODOENVIO`))) join `metodos_pago` `mp` on((`mp`.`IDMETODOPAGO` = `p`.`IDMETODOPAGO`))) WHERE (((`p`.`ESTADO_PAGO` = 'APPROVED') AND (`p`.`UBICACION_REFERENCIA_PEDIDO` <> 'PRUEBA') AND (`p`.`PROVINCIA_CLIENTE` <> '') AND (`p`.`REGION_CLIENTE` <> '') AND ((`p`.`PEDIDO_SUBTOTAL` <> '') OR (`p`.`PEDIDO_SUBTOTAL` <> 0)) AND ((`p`.`PEDIDO_IVA` <> '') OR (`p`.`PEDIDO_IVA` <> 0)) AND ((`p`.`SUBTOTAL_MAS_IVA` <> '') OR (`p`.`SUBTOTAL_MAS_IVA` <> 0)) AND ((`p`.`PEDIDO_TOTAL_FINAL` <> '') OR (`p`.`PEDIDO_TOTAL_FINAL` <> 0)) AND ((`p`.`IDESTADO_ENVIO` = 22) OR (`p`.`IDESTADO_RETIRO` = 22))) OR ((`p`.`IDESTADO_ENVIO` = 22) AND (`p`.`IDESTADO_RETIRO` = 22))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vistapedidosporusuario`
+--
+DROP TABLE IF EXISTS `vistapedidosporusuario`;
+
+CREATE VIEW `vistapedidosporusuario`  AS SELECT `l`.`EMAIL_LOGIN` AS `EMAIL_LOGIN`, `u`.`NOMBRE_USUARIO` AS `NOMBRE_USUARIO`, `u`.`APELLIDO_USUARIO` AS `APELLIDO_USUARIO`, `u`.`DNI_USUARIO` AS `DNI_USUARIO`, `u`.`CELULAR_USUARIO` AS `CELULAR_USUARIO`, count(`p`.`IDPEDIDO`) AS `CANTIDAD_PEDIDOS` FROM ((`login` `l` join `usuarios` `u` on((`u`.`IDLOGIN` = `l`.`IDLOGIN`))) join `pedidos` `p` on((`p`.`IDLOGIN` = `l`.`IDLOGIN`))) WHERE ((`p`.`ESTADO_PAGO` = 'APPROVED') AND (`p`.`UBICACION_REFERENCIA_PEDIDO` <> 'PRUEBA') AND (`p`.`PROVINCIA_CLIENTE` <> '') AND (`p`.`REGION_CLIENTE` <> '') AND ((`p`.`PEDIDO_SUBTOTAL` <> '') OR (`p`.`PEDIDO_SUBTOTAL` <> 0)) AND ((`p`.`PEDIDO_IVA` <> '') OR (`p`.`PEDIDO_IVA` <> 0)) AND ((`p`.`SUBTOTAL_MAS_IVA` <> '') OR (`p`.`SUBTOTAL_MAS_IVA` <> 0)) AND ((`p`.`PEDIDO_TOTAL_FINAL` <> '') OR (`p`.`PEDIDO_TOTAL_FINAL` <> 0))) GROUP BY `l`.`EMAIL_LOGIN`, `u`.`NOMBRE_USUARIO`, `u`.`APELLIDO_USUARIO`, `u`.`DNI_USUARIO`, `u`.`CELULAR_USUARIO` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_productos_activos`
+--
+DROP TABLE IF EXISTS `vista_productos_activos`;
+
+CREATE VIEW `vista_productos_activos`  AS SELECT `p`.`NOMBRE_PRODUCTO` AS `NOMBRE_PRODUCTO`, group_concat(`c`.`NOMBRE_CATEGORIA` separator ', ') AS `CATEGORIAS`, `p`.`CANTIDAD_PRODUCTO` AS `CANTIDAD_PRODUCTO` FROM ((`productos` `p` join `productos_categorias` `pc` on((`pc`.`IDPRODUCTO` = `p`.`IDPRODUCTO`))) join `categorias` `c` on((`c`.`IDCATEGORIA` = `pc`.`IDCATEGORIA`))) WHERE ((`p`.`PRODUCTO_DISPONIBILIDAD` = 1) AND (`p`.`PRODUCTO_BORRADOR` = 0) AND (`p`.`PRODUCTO_SUSPENDIDO` = 0)) GROUP BY `p`.`NOMBRE_PRODUCTO`, `p`.`CANTIDAD_PRODUCTO` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_ventas_tiendas`
+--
+DROP TABLE IF EXISTS `vista_ventas_tiendas`;
+
+CREATE VIEW `vista_ventas_tiendas`  AS SELECT `l`.`USUARIO_LOGIN` AS `USUARIO_LOGIN`, `t`.`NOMBRE_TIENDA` AS `NOMBRE_TIENDA`, `g`.`GANANCIA` AS `GANANCIA`, `p`.`IDTIENDA` AS `IDTIENDA`, `e`.`NOMBRE_ESTADO` AS `ESTADO`, count(`p`.`IDTIENDA`) AS `ventas_totales` FROM ((((`ganancia` `g` join `login` `l` on((`l`.`IDLOGIN` = `g`.`IDLOGIN`))) join `tiendas` `t` on((`t`.`IDLOGIN` = `l`.`IDLOGIN`))) join `estados` `e` on((`e`.`IDESTADO` = `t`.`IDESTADO`))) join `pedidos` `p` on((`p`.`IDTIENDA` = `t`.`IDTIENDA`))) WHERE ((((`p`.`TIPO_ENVIO` = 'A DOMICILIO') AND (`p`.`IDESTADO_ENVIO` = 22)) OR ((`p`.`TIPO_ENVIO` = 'RETIRO EN TIENDA FISICA') AND (`p`.`IDESTADO_RETIRO` = 22)) OR ((`p`.`TIPO_ENVIO` = 'AMBOS') AND (`p`.`IDESTADO_ENVIO` = 22) AND (`p`.`IDESTADO_RETIRO` = 22))) AND (`p`.`PROVINCIA_CLIENTE` <> '') AND (`p`.`REGION_CLIENTE` <> '') AND (`p`.`PEDIDO_SUBTOTAL` <> '') AND (`p`.`PEDIDO_IVA` <> '') AND (`p`.`SUBTOTAL_MAS_IVA` <> '') AND (`p`.`PEDIDO_TOTAL_FINAL` <> '')) GROUP BY `p`.`IDTIENDA`, `l`.`USUARIO_LOGIN`, `t`.`NOMBRE_TIENDA`, `g`.`GANANCIA` ;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `admin_roles_modulo`
+--
+ALTER TABLE `admin_roles_modulo`
+  ADD CONSTRAINT `admin_roles_modulo_ID_ADMIN_MODULO_fkey` FOREIGN KEY (`ID_ADMIN_MODULO`) REFERENCES `admin_modulo` (`ID_ADMIN_MODULO`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `admin_roles_modulo_ID_ADMIN_ROLE_fkey` FOREIGN KEY (`ID_ADMIN_ROLE`) REFERENCES `admin_roles` (`ID_ADMIN_ROLES`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `admin_user`
+--
+ALTER TABLE `admin_user`
+  ADD CONSTRAINT `admin_user_ID_ROL_fkey` FOREIGN KEY (`ID_ROL`) REFERENCES `admin_roles` (`ID_ADMIN_ROLES`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `banco`
+--
+ALTER TABLE `banco`
+  ADD CONSTRAINT `FK_77DEE1D143485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `bloques_promocionales`
+--
+ALTER TABLE `bloques_promocionales`
+  ADD CONSTRAINT `FK_1B1FF58DBD082930` FOREIGN KEY (`IDCATEGORIA`) REFERENCES `categorias` (`IDCATEGORIA`);
+
+--
+-- Filtros para la tabla `bloque_producto`
+--
+ALTER TABLE `bloque_producto`
+  ADD CONSTRAINT `FK_DAE64D3F6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`),
+  ADD CONSTRAINT `FK_DAE64D3FFC1E8143` FOREIGN KEY (`IDBLOQUE_PROMOCIONAL`) REFERENCES `bloques_promocionales` (`IDBLOQUE_PROMOCIONAL`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD CONSTRAINT `FK_77E6BED543485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `categorias_marcas`
+--
+ALTER TABLE `categorias_marcas`
+  ADD CONSTRAINT `FK_CA32EBE0BD082930` FOREIGN KEY (`IDCATEGORIA`) REFERENCES `categorias` (`IDCATEGORIA`),
+  ADD CONSTRAINT `FK_CA32EBE0EE4A9310` FOREIGN KEY (`IDMARCA`) REFERENCES `productos_marcas` (`IDMARCA`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `categorias_tienda`
+--
+ALTER TABLE `categorias_tienda`
+  ADD CONSTRAINT `FK_95438A0A6248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`);
+
+--
+-- Filtros para la tabla `ciudades`
+--
+ALTER TABLE `ciudades`
+  ADD CONSTRAINT `FK_FF770062082C90E` FOREIGN KEY (`IDPROVINCIA`) REFERENCES `provincias` (`IDPROVINCIA`);
+
+--
+-- Filtros para la tabla `cupon`
+--
+ALTER TABLE `cupon`
+  ADD CONSTRAINT `FK_58CFF9496248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`);
+
+--
+-- Filtros para la tabla `cupones_login`
+--
+ALTER TABLE `cupones_login`
+  ADD CONSTRAINT `FK_9EB2B38843485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_9EB2B388B18F6B4A` FOREIGN KEY (`IDCUPON`) REFERENCES `cupon` (`IDCUPON`);
+
+--
+-- Filtros para la tabla `destacados`
+--
+ALTER TABLE `destacados`
+  ADD CONSTRAINT `FK_ED9D1FCA6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `detalle_carrito`
+--
+ALTER TABLE `detalle_carrito`
+  ADD CONSTRAINT `FK_3F38507D5C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`),
+  ADD CONSTRAINT `FK_3F38507D6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`),
+  ADD CONSTRAINT `FK_3F38507DEC20F254` FOREIGN KEY (`IDCARRITO`) REFERENCES `carrito` (`IDCARRITO`);
+
+--
+-- Filtros para la tabla `detalle_pedido`
+--
+ALTER TABLE `detalle_pedido`
+  ADD CONSTRAINT `FK_A834F5695C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`),
+  ADD CONSTRAINT `FK_A834F5696248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`),
+  ADD CONSTRAINT `FK_A834F5696662272E` FOREIGN KEY (`IDPEDIDO`) REFERENCES `pedidos` (`IDPEDIDO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_A834F5696F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `entregas_tipo`
+--
+ALTER TABLE `entregas_tipo`
+  ADD CONSTRAINT `FK_E60B2B3B84D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`);
+
+--
+-- Filtros para la tabla `factura`
+--
+ALTER TABLE `factura`
+  ADD CONSTRAINT `FK_F9EBA00943485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `galeria_tienda`
+--
+ALTER TABLE `galeria_tienda`
+  ADD CONSTRAINT `FK_5DB15BBA6248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`);
+
+--
+-- Filtros para la tabla `ganancia`
+--
+ALTER TABLE `ganancia`
+  ADD CONSTRAINT `FK_1B83752443485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `hotspot`
+--
+ALTER TABLE `hotspot`
+  ADD CONSTRAINT `FK_48B3831330397DD9` FOREIGN KEY (`IDSCENE`) REFERENCES `scenes` (`IDSCENE`);
+
+--
+-- Filtros para la tabla `login`
+--
+ALTER TABLE `login`
+  ADD CONSTRAINT `FK_AA08CB103AB8AF19` FOREIGN KEY (`IDVERIFICACION`) REFERENCES `estados` (`IDESTADO`),
+  ADD CONSTRAINT `FK_AA08CB1084D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`);
+
+--
+-- Filtros para la tabla `logs_api`
+--
+ALTER TABLE `logs_api`
+  ADD CONSTRAINT `FK_F531ED8543485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `ofertas`
+--
+ALTER TABLE `ofertas`
+  ADD CONSTRAINT `FK_48C925F343485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_48C925F3C7FC4A45` FOREIGN KEY (`IDSUBASTA`) REFERENCES `subastas` (`IDSUBASTA`);
+
+--
+-- Filtros para la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD CONSTRAINT `FK_6716CCAA43485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_6716CCAA43D657DF` FOREIGN KEY (`IDESTADO_RETIRO`) REFERENCES `estados` (`IDESTADO`),
+  ADD CONSTRAINT `FK_6716CCAA622DEC88` FOREIGN KEY (`IDFACTURA`) REFERENCES `factura` (`IDFACTURA`),
+  ADD CONSTRAINT `FK_6716CCAA6248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`),
+  ADD CONSTRAINT `FK_6716CCAA8184F9E3` FOREIGN KEY (`IDMETODOPAGO`) REFERENCES `metodos_pago` (`IDMETODOPAGO`),
+  ADD CONSTRAINT `FK_6716CCAAAC214E10` FOREIGN KEY (`ID_REGATEO`) REFERENCES `regateos` (`ID_REGATEO`),
+  ADD CONSTRAINT `FK_6716CCAAB18F6B4A` FOREIGN KEY (`IDCUPON`) REFERENCES `cupon` (`IDCUPON`),
+  ADD CONSTRAINT `FK_6716CCAABDB8FCAA` FOREIGN KEY (`ID_METODOENVIO`) REFERENCES `metodos_envio` (`ID_METODOENVIO`),
+  ADD CONSTRAINT `FK_6716CCAAD597B125` FOREIGN KEY (`IDESTADO_ENVIO`) REFERENCES `estados` (`IDESTADO`);
+
+--
+-- Filtros para la tabla `preguntas`
+--
+ALTER TABLE `preguntas`
+  ADD CONSTRAINT `FK_3879485543485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_387948556F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD CONSTRAINT `FK_767490E62C08347E` FOREIGN KEY (`IDCIUDAD`) REFERENCES `ciudades` (`IDCIUDAD`),
+  ADD CONSTRAINT `FK_767490E66051064B` FOREIGN KEY (`IDENTRAGAS_TIPO`) REFERENCES `entregas_tipo` (`IDENTRAGAS_TIPO`),
+  ADD CONSTRAINT `FK_767490E66248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`),
+  ADD CONSTRAINT `FK_767490E684D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`),
+  ADD CONSTRAINT `FK_767490E6CB4E313D` FOREIGN KEY (`IDUSUARIOS_DIRECCIONES`) REFERENCES `usuarios_direcciones` (`IDUSUARIOS_DIRECCIONES`),
+  ADD CONSTRAINT `FK_767490E6D66C2581` FOREIGN KEY (`IDTIPO_VENTA`) REFERENCES `productos_ventas` (`IDTIPO_VENTA`),
+  ADD CONSTRAINT `FK_767490E6E9F88D07` FOREIGN KEY (`IDTIPO_PRODUCTO`) REFERENCES `productos_tipo` (`IDTIPO_PRODUCTO`),
+  ADD CONSTRAINT `FK_767490E6EE4A9310` FOREIGN KEY (`IDMARCA`) REFERENCES `productos_marcas` (`IDMARCA`);
+
+--
+-- Filtros para la tabla `productos_categorias`
+--
+ALTER TABLE `productos_categorias`
+  ADD CONSTRAINT `FK_F48F98D76F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_F48F98D7BD082930` FOREIGN KEY (`IDCATEGORIA`) REFERENCES `categorias` (`IDCATEGORIA`);
+
+--
+-- Filtros para la tabla `productos_categorias_tienda`
+--
+ALTER TABLE `productos_categorias_tienda`
+  ADD CONSTRAINT `FK_9C160DEB6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`),
+  ADD CONSTRAINT `FK_9C160DEB9EA5E911` FOREIGN KEY (`IDCATEGORIA_TIENDA`) REFERENCES `categorias_tienda` (`IDCATEGORIA_TIENDA`);
+
+--
+-- Filtros para la tabla `productos_comentarios`
+--
+ALTER TABLE `productos_comentarios`
+  ADD CONSTRAINT `FK_A95245DF43485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_A95245DF6662272E` FOREIGN KEY (`IDPEDIDO`) REFERENCES `pedidos` (`IDPEDIDO`),
+  ADD CONSTRAINT `FK_A95245DF6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `productos_favoritos`
+--
+ALTER TABLE `productos_favoritos`
+  ADD CONSTRAINT `FK_4D16C1143485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_4D16C116F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `productos_galeria`
+--
+ALTER TABLE `productos_galeria`
+  ADD CONSTRAINT `FK_A10E30966F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `productos_subcategorias`
+--
+ALTER TABLE `productos_subcategorias`
+  ADD CONSTRAINT `FK_7C84AE6A6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_7C84AE6A77F8BC20` FOREIGN KEY (`IDSUBCATEGORIA`) REFERENCES `subcategorias` (`IDSUBCATEGORIA`);
+
+--
+-- Filtros para la tabla `productos_subcategorias_tienda`
+--
+ALTER TABLE `productos_subcategorias_tienda`
+  ADD CONSTRAINT `FK_50AA68FE6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`),
+  ADD CONSTRAINT `FK_50AA68FEF0C98206` FOREIGN KEY (`IDSUBCATEGORIATIENDA`) REFERENCES `subcategorias_tiendas` (`IDSUBCATEGORIATIENDA`);
+
+--
+-- Filtros para la tabla `producto_cupon`
+--
+ALTER TABLE `producto_cupon`
+  ADD CONSTRAINT `FK_18E8F1236F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`),
+  ADD CONSTRAINT `FK_18E8F123B18F6B4A` FOREIGN KEY (`IDCUPON`) REFERENCES `cupon` (`IDCUPON`);
+
+--
+-- Filtros para la tabla `prospecto_cupon`
+--
+ALTER TABLE `prospecto_cupon`
+  ADD CONSTRAINT `FK_3A0AC57AB18F6B4A` FOREIGN KEY (`IDCUPON`) REFERENCES `cupon` (`IDCUPON`),
+  ADD CONSTRAINT `FK_3A0AC57AD26A6B54` FOREIGN KEY (`IDPROSPECTO`) REFERENCES `prospecto` (`IDPROSPECTO`);
+
+--
+-- Filtros para la tabla `recargas`
+--
+ALTER TABLE `recargas`
+  ADD CONSTRAINT `FK_41AFC61D4981C500` FOREIGN KEY (`ID_SALDO`) REFERENCES `saldo` (`ID_SALDO`),
+  ADD CONSTRAINT `FK_41AFC61D672B646D` FOREIGN KEY (`IDRETIRO`) REFERENCES `retiros` (`IDRETIRO`),
+  ADD CONSTRAINT `FK_41AFC61D6F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `regateos`
+--
+ALTER TABLE `regateos`
+  ADD CONSTRAINT `FK_6252223743485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_625222375C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`),
+  ADD CONSTRAINT `FK_625222376F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `reset_password_request`
+--
+ALTER TABLE `reset_password_request`
+  ADD CONSTRAINT `FK_7CE748A43485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `respuestas`
+--
+ALTER TABLE `respuestas`
+  ADD CONSTRAINT `FK_5CD06EB143485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_5CD06EB1FAAB4C5` FOREIGN KEY (`IDPREGUNTA`) REFERENCES `preguntas` (`IDPREGUNTA`);
+
+--
+-- Filtros para la tabla `retiros`
+--
+ALTER TABLE `retiros`
+  ADD CONSTRAINT `FK_88C295C39E9E73D2` FOREIGN KEY (`IDBANCO`) REFERENCES `banco` (`IDBANCO`),
+  ADD CONSTRAINT `FK_88C295C3BAC92016` FOREIGN KEY (`IDGANANCIA`) REFERENCES `ganancia` (`IDGANANCIA`);
+
+--
+-- Filtros para la tabla `saldo`
+--
+ALTER TABLE `saldo`
+  ADD CONSTRAINT `FK_669B1D4A43485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `scenes`
+--
+ALTER TABLE `scenes`
+  ADD CONSTRAINT `FK_7DD18D2E49E6CF4F` FOREIGN KEY (`IDTOUR`) REFERENCES `virtual_tour` (`IDTOUR`);
+
+--
+-- Filtros para la tabla `servientrega`
+--
+ALTER TABLE `servientrega`
+  ADD CONSTRAINT `FK_CF227D6E6248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`),
+  ADD CONSTRAINT `FK_CF227D6E6662272E` FOREIGN KEY (`IDPEDIDO`) REFERENCES `pedidos` (`IDPEDIDO`),
+  ADD CONSTRAINT `FK_CF227D6EBDB8FCAA` FOREIGN KEY (`ID_METODOENVIO`) REFERENCES `metodos_envio` (`ID_METODOENVIO`);
+
+--
+-- Filtros para la tabla `subastas`
+--
+ALTER TABLE `subastas`
+  ADD CONSTRAINT `FK_875BF3A45C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`),
+  ADD CONSTRAINT `FK_875BF3A46248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`),
+  ADD CONSTRAINT `FK_875BF3A46F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `subcategorias`
+--
+ALTER TABLE `subcategorias`
+  ADD CONSTRAINT `FK_10E64CFBD082930` FOREIGN KEY (`IDCATEGORIA`) REFERENCES `categorias` (`IDCATEGORIA`);
+
+--
+-- Filtros para la tabla `subcategorias_tiendas`
+--
+ALTER TABLE `subcategorias_tiendas`
+  ADD CONSTRAINT `FK_75F280959EA5E911` FOREIGN KEY (`IDCATEGORIA_TIENDA`) REFERENCES `categorias_tienda` (`IDCATEGORIA_TIENDA`);
+
+--
+-- Filtros para la tabla `tarifas_servientrega`
+--
+ALTER TABLE `tarifas_servientrega`
+  ADD CONSTRAINT `FK_716DA823BDB8FCAA` FOREIGN KEY (`ID_METODOENVIO`) REFERENCES `metodos_envio` (`ID_METODOENVIO`);
+
+--
+-- Filtros para la tabla `terminos`
+--
+ALTER TABLE `terminos`
+  ADD CONSTRAINT `FK_9CF0353A478D32B8` FOREIGN KEY (`IDATRIBUTO`) REFERENCES `atributos` (`IDATRIBUTO`);
+
+--
+-- Filtros para la tabla `tiendas`
+--
+ALTER TABLE `tiendas`
+  ADD CONSTRAINT `FK_DAAF144543485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_DAAF144584D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`);
+
+--
+-- Filtros para la tabla `token`
+--
+ALTER TABLE `token`
+  ADD CONSTRAINT `FK_5F37A13B43485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`);
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `FK_EF687F243485913` FOREIGN KEY (`IDLOGIN`) REFERENCES `login` (`IDLOGIN`),
+  ADD CONSTRAINT `FK_EF687F25D6A18D9` FOREIGN KEY (`IDPAIS`) REFERENCES `pais` (`IDPAIS`),
+  ADD CONSTRAINT `FK_EF687F284D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`);
+
+--
+-- Filtros para la tabla `usuarios_direcciones`
+--
+ALTER TABLE `usuarios_direcciones`
+  ADD CONSTRAINT `FK_CDF17BEE2C08347E` FOREIGN KEY (`IDCIUDAD`) REFERENCES `ciudades` (`IDCIUDAD`),
+  ADD CONSTRAINT `FK_CDF17BEE84D3D003` FOREIGN KEY (`IDESTADO`) REFERENCES `estados` (`IDESTADO`),
+  ADD CONSTRAINT `FK_CDF17BEEB9A3FCDC` FOREIGN KEY (`IDUSUARIO`) REFERENCES `usuarios` (`IDUSUARIO`);
+
+--
+-- Filtros para la tabla `variaciones`
+--
+ALTER TABLE `variaciones`
+  ADD CONSTRAINT `FK_95CD87536F15327` FOREIGN KEY (`IDPRODUCTO`) REFERENCES `productos` (`IDPRODUCTO`);
+
+--
+-- Filtros para la tabla `variaciones_galeria`
+--
+ALTER TABLE `variaciones_galeria`
+  ADD CONSTRAINT `FK_CFD0B5A75C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`);
+
+--
+-- Filtros para la tabla `variaciones_terminos`
+--
+ALTER TABLE `variaciones_terminos`
+  ADD CONSTRAINT `FK_4070F8913DBA6008` FOREIGN KEY (`IDTERMINOS`) REFERENCES `terminos` (`IDTERMINOS`),
+  ADD CONSTRAINT `FK_4070F8915C4D67D1` FOREIGN KEY (`IDVARIACION`) REFERENCES `variaciones` (`IDVARIACION`);
+
+--
+-- Filtros para la tabla `virtual_tour`
+--
+ALTER TABLE `virtual_tour`
+  ADD CONSTRAINT `FK_8359E4516248D4DE` FOREIGN KEY (`IDTIENDA`) REFERENCES `tiendas` (`IDTIENDA`);
+
+DELIMITER $$
+--
+-- Eventos
+--
+CREATE DEFINER=`sbuser`@`%` EVENT `desactivar_cupones_expirados` ON SCHEDULE EVERY 1 HOUR STARTS '2024-05-08 12:07:09' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE shopby.cupon
+  SET ACTIVO_CUPON = 0
+  WHERE FECHA_FIN_CUPON < NOW()$$
+
+CREATE DEFINER=`sbuser`@`%` EVENT `reset_biometrico_limite` ON SCHEDULE EVERY 1 HOUR STARTS '2024-11-08 16:04:57' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    -- Resetear conteo biometrico usuario
+    update usuarios
+    SET   LIMITE_BIOMETRICO = 0, USUARIO_HAS_VERIFIED = FALSE 
+    WHERE FECHA_BIOMETRICO < NOW() - interval 24 hour;
+
+END$$
+
+DELIMITER ;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

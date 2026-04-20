@@ -1,0 +1,143 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Shopby Marketplace
+            description: |
+                REST API Shopby
+
+                **Respuestas comunes**:
+
+                - `200 OK para POST, PATCH, PUT`: Éxito (ver esquema `SuccessMessage`)
+                - `400 Bad Request POST PATCH, PUT`: Error de validación (ver esquema `ValidationError`)
+                - `Codigo segun error`: Error de acceso o lógica (ver esquema `ErrorMessage`)
+            version: 2.0.2
+
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+
+                BasicAuth:
+                    type: http
+                    scheme: basic
+
+            responses:
+                ValidationError:
+                    description: "Errores de validación de formulario"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidationError'
+
+                ErrorMessage:
+                    description: "Respuesta de error personalizada"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SingleFieldError'
+
+                SuccessMessage:
+                    description: "Respuesta exitosa"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SuccessMessage'
+
+            schemas:
+                ValidationError:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                            example: "Algunos campos no son válidos, por favor verifique los datos e intente nuevamente."
+                        errors:
+                            type: object
+                            additionalProperties:
+                                type: array
+                                items:
+                                    type: string
+                    example:
+                        message: "Algunos campos no son válidos, por favor verifique los datos e intente nuevamente."
+                        errors:
+                            email:
+                                - "Este campo no es válido."
+                            password:
+                                - "Este campo no debe estar vacío."
+
+                SingleFieldError:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                            example: "Acción no permitida"
+                        errors:
+                            type: array
+                            items:
+                                type: object
+                                additionalProperties:
+                                    type: string
+                    example:
+                        message: "Acción no permitida"
+                        errors:
+                            - description: "No puedes eliminar este recurso"
+
+                StringBasedError:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                            example: "El nombre ya está en uso"
+                        errors:
+                            oneOf:
+                                - type: string
+                                - type: object
+                    example:
+                        message: "El nombre ya está en uso"
+                        errors:
+                            nombre: "Ya existe"
+
+                SuccessMessage:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                            example: "Producto creado correctamente"
+                        data:
+                            type: object
+                            additionalProperties: true
+                    example:
+                        message: "Producto creado correctamente"
+                        data:
+                            id: 123
+                            nombre: "Zapato deportivo"
+
+        paths:
+            default:
+                responses:
+                    '200':
+                        $ref: '#/components/responses/SuccessMessage'
+                    '400':
+                        $ref: '#/components/responses/ValidationError'
+                    '403':
+                        $ref: '#/components/responses/ErrorMessage'
+
+    areas:
+        # Área para las rutas de la API que SÍ requieren autenticación
+        api:
+            path_patterns:
+                - '^/api'
+            documentation:
+                security:
+                    - Bearer: []
+
+        front:
+             path_patterns:
+                 - '^/'
+             documentation:
+                 security:
+                     - BasicAuth: []
+        default:
+            path_patterns:
+                - '^((?!(?:_error|_wdt|_profiler|doc)).)*$'

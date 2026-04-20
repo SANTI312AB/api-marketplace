@@ -1,0 +1,11 @@
+framework:
+    messenger:
+        transports:
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # Puedes dejar sync:// si lo usas en otras partes
+            sync: 'sync://'
+
+        routing:
+            App\Message\ActualizarGananciaMessage: sync
+            App\Message\ActualizarPagoMessage: sync
+            App\Message\RechazoPagoMessage: sync

@@ -1,0 +1,92 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        # ----------------------------------------------------------------------
+        # OPTIMIZACIÓN 1: Define tu versión exacta. 
+        # Evita que Doctrine haga una query extra al inicio para adivinarla.
+        # Cambia esto por tu versión real (ej: '10.11.2-MariaDB' o '8.0.33')
+        # ----------------------------------------------------------------------
+        profiling_collect_backtrace: '%kernel.debug%'
+        use_savepoints: true
+
+        options:
+            # PDO::MYSQL_ATTR_INIT_COMMAND (1002)
+            # ADVERTENCIA: Ejecutar esto en cada conexión añade latencia. 
+            # Si puedes, cambia el sql_mode en el my.cnf del servidor.
+            1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
+            
+            # PDO::ATTR_TIMEOUT (1003) - Timeouts altos
+            1003: 'SET SESSION wait_timeout = 28800, interactive_timeout = 28800'
+
+    orm:
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true # Excelente para rendimiento (Symfony 6.3+)
+        
+        # Estas validaciones consumen recursos. Idealmente solo en DEV, 
+        # pero si la caché de metadatos funciona bien, el impacto en prod es bajo.
+        report_fields_where_declared: true
+        validate_xml_mapping: true
+        
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        
+        # Tus funciones DQL personalizadas
+        dql:
+            string_functions:
+                date_format: DoctrineExtensions\Query\Mysql\DateFormat
+                group_concat: DoctrineExtensions\Query\Mysql\GroupConcat
+                ifnull: DoctrineExtensions\Query\Mysql\IfNull
+                match_against: DoctrineExtensions\Query\Mysql\MatchAgainst
+                REGEXP: DoctrineExtensions\Query\Mysql\Regexp
+                RLIKE: App\Doctrine\Functions\RLikeFunction
+            numeric_functions:
+                rand: DoctrineExtensions\Query\Mysql\Rand        
+            datetime_functions:
+                date: DoctrineExtensions\Query\Mysql\Date
+                datediff: DoctrineExtensions\Query\Mysql\DateDiff
+
+        mappings:
+            App:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+
+when@test:
+    doctrine:
+        dbal:
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            
+            # Metadata Cache: Estructura de las tablas y entidades
+            metadata_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            
+            # Query Cache: Traducción de DQL a SQL
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            
+            # Result Cache: Resultados de las consultas (solo si usas ->enableResultCache())
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                # OPTIMIZACIÓN 2: Usar APCu para cosas internas del sistema (Metadata/Query)
+                # APCu es memoria RAM local, mucho más rápido que Redis para esto.
+                doctrine.system_cache_pool:
+                    adapter: cache.adapter.filesystem
+
+                # OPTIMIZACIÓN 3: Usar Redis para resultados de datos
+                # Esto permite compartir caché entre servidores si escalas.
+                doctrine.result_cache_pool:
+                    adapter: cache.adapter.filesystem

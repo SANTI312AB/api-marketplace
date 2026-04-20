@@ -1,0 +1,20 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    
+    # Vincula estas opciones al modo debug de Symfony.
+    # En PROD (debug=false), esto desactiva la sobrecarga de depuración.
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+when@prod:
+    twig:
+        # CRÍTICO: Si está en true, Twig mira la fecha de modificación de los archivos
+        # .html.twig en CADA petición. En producción, el código no cambia.
+        # Ponerlo en false ahorra mucho I/O de disco.
+        auto_reload: false
+        
+        # Asegura explícitamente que la caché de plantillas esté activa
+        cache: '%kernel.cache_dir%/twig'
+
+when@test:
+    twig:
+        strict_variables: true

@@ -1,0 +1,8 @@
+CREATE TRIGGER deactivate_coupon_after_limit BEFORE UPDATE ON cupon
+FOR EACH ROW
+BEGIN
+  IF NEW.USO_CUPON = NEW.LIMITE_USO THEN
+    SET NEW.ACTIVO_CUPON = false;
+  END IF;
+END;
+

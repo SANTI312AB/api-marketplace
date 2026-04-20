@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style type="text/css">
+      body {
+        font-family: "Gantari", sans-serif;
+        margin: 0 auto;
+        padding: 0;
+        box-sizing: border-box;
+        background: #f3f4f6;
+        width: 100%;
+        max-width: 600px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      p {
+        font-size: 15px;
+      }
+      a {
+        text-decoration: none;
+      }
+      small {
+        font-size: 12px;
+        color: #a0a0a0;
+      }
+
+      .main-content-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        justify-content: space-between;
+      }
+      .card {
+        background: #ffffff;
+        padding: 15px 20px;
+        border-radius: 20px;
+      }
+      .muted {
+        background: #ffffff;
+      }
+
+      .gradient-button {
+        background: linear-gradient(90deg, #325ffc 0%, #d53779 100%);
+        border: none;
+        color: white;
+        padding: 8px 50px;
+        border-radius: 5px;
+        cursor: pointer;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .test {
+        border: 2px solid red;
+      }
+      .bold {
+        font-weight: 700;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .footer-background {
+        background: #06050d;
+      }
+      @media only screen and (max-width: 450px) {
+        .genio {
+          height: 100px;
+        }
+        .info-container {
+          width: 75%;
+        }
+        .genio-container {
+          width: 25%;
+        }
+        .responsive-table {
+          display: block;
+          margin: 10px 0;
+          width: 100%;
+        }
+      }
+
+      @media only screen and (min-width: 450px) {
+        .genio {
+          height: 250px;
+        }
+        .info-container {
+          width: 50%;
+        }
+        .genio-container {
+          width: 50%;
+        }
+
+        .responsive-3-4 {
+          width: 75%;
+        }
+        .responsive-1-4 {
+          width: 25%;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    style="
+      margin: 0 auto;
+      box-sizing: border-box;
+      background: #f3f4f6;
+      width: 100%;
+      max-width: 700px;
+      color: #06050d;
+    "
+  >
+    <div style="padding: 10px 20px 0 20px">
+      <div>
+        <table>
+          <tr>
+            <td>
+              <img
+                src="https://rest.shopby.com.ec/public/shopby/logo-shopby.png"
+                style="width: 50px; height: 50px"
+              />
+            </td>
+            <td>
+              <img
+                src="https://rest.shopby.com.ec/public/shopby/logo-shopby-letras.png"
+                style="height: 35px"
+              />
+            </td>
+          </tr>
+        </table>
+
+        <div>
+          <main>
+            <table style="width: 100%">
+              <tr>
+                <td class="info-container">
+                  <table style="width: 100%">
+                    <tr>
+                      <td style="padding: 20px 0">
+                        <h1
+                          style="margin: 0; font-size: 24px; line-height: 30px"
+                        >
+                          {{nombre}},<br />¡Tu pedido esta listo para retirarse de la tienda!
+                        </h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding-bottom: 20px">
+                        <p style="margin: 0">
+                            Tu pedido ya está listo para ser retirado
+                            en nuestra tienda física. ¡Te esperamos!
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding-bottom: 20px">
+                        <a
+                          href="https://shopby.com.ec/cuenta/compras/{{n_pedido}}"
+                          style="
+                            background: #325ffc;
+                            border: none;
+                            color: white;
+                            padding: 8px 50px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            border-radius: 50px;
+                            font-size: 14px;
+                            font-weight: 500;
+                          "
+                          >Ver pedido</a
+                        >
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td class="genio-container" style="text-align: right">
+                  <img
+                    src="https://rest.shopby.com.ec/public/shopby/genios/saludo.png"
+                    class="genio"
+                  />
+                </td>
+              </tr>
+            </table>
+          </main>          
+        </div>
+
+       
+        
+        <!--  -->
+
+          <div
+            style="
+              margin-top: 20px;
+              background: #ffffff;
+              padding: 20px;
+              border-radius: 20px;
+            "
+          >
+            <div
+              style="
+                padding-bottom: 10px;
+                text-align: center;
+                border-bottom: 1px solid #f3f4f6;
+              "
+            >
+              <h2>Resumen de tu orden</h2>
+            </div>
+
+            <div style="border-bottom: 1px solid #f3f4f6; padding: 15px 0">
+                <h3>Retiro en tienda física</h3>
+                <div
+                  style="
+                    height: 8px;
+                    width: full;
+                    position: relative;
+                    background: #f3f4f6;
+                    border-radius: 20px;
+                    overflow: hidden;
+                    margin-top: 10px;
+                  "
+                >
+                  <div
+                    style="
+                      background: #325ffc;
+                      position: absolute;
+                      height: 100%;
+                      width: 25%;
+                      border-radius: 20px;
+                    "
+                  ></div>
+                </div>
+                <table style="margin-top: 20px; width: 100%">
+                  <tr>
+                    <td style="text-align: center; width: 50%">
+                      <img src="https://rest.shopby.com.ec/public/shopby/icons/bag.png" style="width: 20px" />
+                      <p>Listo para retirar</p>
+                    </td>
+                    <td style="text-align: center; width: 50%">
+                      <img src="https://rest.shopby.com.ec/public/shopby/icons/package.png" style="width: 24px" />
+                      <p>Retirado</p>
+                    </td>
+                  </tr>
+                </table>
+
+                    <div
+                  style="
+                    border: 1px solid #f3f4f6;
+                    border-radius: 10px;
+                    padding: 10px;
+                    margin-top: 10px;
+                  "
+                >
+
+                <table style="width: 100%">
+                {% set Total_subtotal = 0 %}
+                {% set Total_iva = 0 %}
+
+                {% set direccion_tienda = '' %}
+                 {% set ciudad_tienda = '' %}
+                
+               {% if detalle is not empty %}
+                {% for detalleCarrito in detalle %}
+                {% if detalleCarrito.tipo_entrega == 'RETIRO EN TIENDA FISICA' and detalleCarrito.tipo_producto !=4 %}
+  
+            {% set subtotal_producto = detalleCarrito.subtotal %}
+            {% set iva_producto = detalleCarrito.iva %}
+            
+
+            {% set Total_subtotal = Total_subtotal + subtotal_producto %}
+            {% set Total_iva = Total_iva + iva_producto %}
+                <tr>
+                    <td style="vertical-align: middle">
+                        {% if detalleCarrito.imagenes is not empty %}
+                            <img src="https://rest.shopby.com.ec/public/productos/{{ detalleCarrito.imagenes[0].url }}" style="width: 50px; height: 50px; border-radius: 10px" />
+                        {% else %}
+                            <!-- Aquí puedes poner una imagen predeterminada si no hay imágenes disponibles -->
+                        {% endif %}
+                    </td>
+                    <td style="width: 100%; vertical-align: top; padding-left: 10px;">
+                        <p style="font-weight: 600">{{ detalleCarrito.nombre_producto }}</p>
+                        <p><span style="font-weight: 600">Cantidad:</span> {{ detalleCarrito.cantidad }}</p>
+                        {% if detalleCarrito.terminos is not empty %}
+                            <ul>
+                                {% for termino in detalleCarrito.terminos %}
+                                    <li>{{ termino.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                    <td style="width: 100%; vertical-align: top; padding-left: 10px;">
+                        <p style="font-weight: 600">${{ detalleCarrito.subtotal | number_format(2, '.', ',') }}</p>
+                    </td>
+                </tr>
+
+
+              {% endif %}
+              {% endfor %}
+             {% else %}
+               <tr>
+            <td colspan="5">No hay elementos para retirar en tienda física en el carrito</td>
+            </tr>
+             {% endif %}
+          </table>
+
+                 
+                </div>
+  
+                </div>
+              </div>
+
+            <!--Costos  -->
+              {% set Total_pagar = Total_subtotal + Total_iva + costo_envio %}
+            <div>
+               <table style="width: 100%; font-weight: 600">
+                <tr>
+                  <td style="text-align: left">
+                    <p>Subtotal</p>
+                  </td>
+                  <td style="text-align: right">
+                    <p>{{Total_subtotal | number_format(2, '.', ',')}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: left">
+                    <p>IVA</p>
+                  </td>
+                  <td style="text-align: right">
+                    <p>{{Total_iva | number_format(2, '.', ',')}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: left">
+                    <p>Entrega a domicilio</p>
+                  </td>
+                  <td style="text-align: right">
+                    <p>{{costo_envio | number_format(2, '.', ',')}}</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  
+                      <td style="text-align: left;">
+                        <p style="font-size: 20px;">Total a pagar</p>
+                      </td>
+                      <td style="text-align: right">
+                        <p style="font-size: 20px;">{{Total_pagar | number_format(2, '.', ',') }}</p>
+                      </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          {% if detalle is not empty %}
+    {% for detalleCarrito in detalle %}
+        {% if detalleCarrito.tipo_entrega == 'RETIRO EN TIENDA FISICA' %}
+            {% set direccion_tienda = detalleCarrito.direccion %}
+            {% set ciudad_tienda = detalleCarrito.ciudad %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+           <div style="margin-top: 20px; background: #ffffff; padding: 15px 20px; border-radius: 20px;">
+    <h2>Dirección de la tienda</h2>
+    <div style="margin-top: 10px;">
+        <p>{{ direccion_tienda }}</p>
+        <p>{{ ciudad_tienda }}</p>
+    </div>
+</div>
+
+
+          <div
+            style="
+              margin-top: 20px;
+              background: #ffffff;
+              padding: 15px 20px;
+              border-radius: 20px;
+            "
+          >
+            <h2>Método de pago</h2>
+            <div style="margin-top: 10px">
+              <p style="font-weight: 600;">{{metodo_pago}}</p>
+              <div style="margin: 10px 0; padding: 5px 10px; background: #bbf7d0; width: min-content; white-space: nowrap; border-radius: 50px;">
+                <p style="color: #16a34a;">Aprobado</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 20px;
+              background: #ffffff;
+              padding: 15px 20px;
+              border-radius: 20px;
+            "
+          >
+            <h2>¿Necesitas ayuda?</h2>
+            <table style="width: 100%">
+              <tr>
+                <td
+                  class="responsive-table responsive-3-4"
+                  style="vertical-align: middle"
+                >
+                  <table style="width: 100%; border-collapse: collapse">
+                    <tr>
+                      <td style="vertical-align: middle">
+                        <a
+                          href="https://api.whatsapp.com/send/?phone=593999705646"
+                        >
+                          <img
+                            src="https://rest.shopby.com.ec/public/shopby/whatsapp.png"
+                            style="
+                              height: 35px;
+                              width: 35px;
+                              vertical-align: middle;
+                              margin-right: 5px;
+                            "
+                          />
+                        </a>
+                      </td>
+                      <td style="vertical-align: middle">
+                        <p style="margin: 0">
+                          Contáctate con servicio al cliente, <br/> ¡estamos
+                          disponibles para solventar cualquier duda!
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td
+                  class="responsive-table responsive-1-4"
+                  style="vertical-align: middle"
+                >
+                  <p style="margin: 0">
+                    <span style="font-weight: 700">Siguenos en:</span>
+                  </p>
+                  <table style="margin-top: 5px">
+                    <tr>
+                      <td>
+                        <a href="https://www.facebook.com/shopbyecu">
+                          <img
+                            src="https://rest.shopby.com.ec/public/shopby/facebook.png"
+                            style="height: 35px"
+                          />
+                        </a>
+                      </td>
+
+                      <td>
+                        <a href="https://www.instagram.com/shopby_ec/">
+                          <img
+                            src="https://rest.shopby.com.ec/public/shopby/instagram.png"
+                            style="height: 35px; margin-left: 5px"
+                          />
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+
+        
+
+        </div>
+      </div>
+      <div
+        style="
+          background: #161e29;
+          height: 150px !important;
+          margin: 20px 0 0 0 !important;
+          padding: 25px 0 25px 0 !important;
+        "
+      >
+        <table style="width: 100%; height: 100%">
+          <tr>
+            <td style="vertical-align: middle; text-align: center">
+              <img
+                src="https://rest.shopby.com.ec/public/shopby/logo-shopby.png"
+                style="height: 50px"
+              />
+              <p style="color: #ffffff; margin: 5px 0 0">shopby.com.ec</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

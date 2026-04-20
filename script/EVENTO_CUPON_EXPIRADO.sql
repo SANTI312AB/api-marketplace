@@ -1,0 +1,36 @@
+DELIMITER $$
+
+CREATE EVENT actualizar_pedidos_entregados
+ON SCHEDULE EVERY 1 HOUR
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+    -- Actualizar pedidos con 'A DOMICILIO'
+    UPDATE pedidos p
+    SET p.IDESTADO = 22
+    WHERE p.ESTADO_PAGO = 'APPROVED'
+      AND p.FECHA_PEDIDO < NOW() - INTERVAL 96 HOUR
+      AND p.TIPO_ENVIO = 'A DOMICILIO'
+      AND p.IDESTADO = 20;
+    
+    -- Actualizar pedidos con 'RETIRO EN TIENDA FISICA'
+    UPDATE pedidos p
+    SET p.IDESTADO_RETIRO = 22
+    WHERE p.ESTADO_PAGO = 'APPROVED'
+      AND p.FECHA_PEDIDO < NOW() - INTERVAL 96 HOUR
+      AND p.TIPO_ENVIO = 'RETIRO EN TIENDA FISICA'
+      AND p.IDESTADO_RETIRO = 26;
+
+    -- Actualizar pedidos con 'AMBOS'
+    UPDATE pedidos p
+    SET p.IDESTADO = 22,
+        p.IDESTADO_RETIRO = 22
+    WHERE p.ESTADO_PAGO = 'APPROVED'
+      AND p.FECHA_PEDIDO < NOW() - INTERVAL 96 HOUR
+      AND p.TIPO_ENVIO = 'AMBOS'
+      AND p.IDESTADO = 20
+      AND p.IDESTADO_RETIRO = 26;
+END $$
+
+DELIMITER ;
+

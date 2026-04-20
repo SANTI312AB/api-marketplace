@@ -1,0 +1,63 @@
+# config/packages/security.yaml
+security:
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+  providers:
+    app_user_provider:
+      id: App\Security\UserProvider        # Para JWT (usuarios de tu app)
+    public_user_provider:
+      entity:
+        class: App\Entity\PublicUser
+        property: username                 # Para Basic Auth
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    # 🔓 Firewall exclusivo para emitir el token JWT
+    login:
+      pattern: ^/authentication_token
+      stateless: true
+      provider: app_user_provider
+      json_login:
+        check_path: /authentication_token
+        # Ajusta estos si usas otros nombres de campos en el body:
+        username_path: username
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    # 🔑 Rutas API protegidas con JWT
+    api:
+      pattern: ^/api|^/metodos_envio
+      provider: app_user_provider
+      stateless: true
+      jwt: ~
+
+    # 🔐 Todo lo que NO es /api (excepto /authentication_token) usa Basic Auth
+    basic_auth:
+      pattern: ^/(?!api|authentication_token)
+      provider: public_user_provider
+      stateless: true
+      lazy: true                # Evita “desafiar” si access_control permite acceso
+      http_basic:
+        realm: 'Secured Area'
+
+  access_control:
+    # 🔓 Rutas públicas
+    - { path: ^/connect/apple/callback, roles: PUBLIC_ACCESS }
+    - { path: ^/connect/google/check,   roles: PUBLIC_ACCESS }
+    - { path: ^/connect/facebook/check, roles: PUBLIC_ACCESS }
+    - { path: ^/notificacion_pago,      roles: PUBLIC_ACCESS }
+    - { path: ^/paypal/hook,            roles: PUBLIC_ACCESS }
+    - { path: ^/verify/email,           roles: PUBLIC_ACCESS }
+    - { path: ^/metodos_envio,          roles: PUBLIC_ACCESS }
+    - { path: ^/webhook/whatsapp,       roles: PUBLIC_ACCESS }
+    - { path: ^/reset,                  roles: PUBLIC_ACCESS }
+    - { path: ^/authentication_token,   roles: PUBLIC_ACCESS }    
+    # 🔑 API → requiere JWT
+    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    # 🔐 Resto → Basic Auth
+    - { path: ^/, roles: IS_AUTHENTICATED}
