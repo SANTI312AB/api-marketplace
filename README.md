@@ -63,9 +63,9 @@ Ideal si prefieres gestionar tu propio servidor web y base de datos localmente.
     composer install
     ```
 3.  **Configuración de Base de Datos:**
-    Edita el archivo `.env.local` y configura tu conexión a MySQL 8.4:
+    Edita el archivo `.env` y configura tu conexión a MySQL 8.4:
     ```env
-    DATABASE_URL="mysql://root:password@127.0.0.1:3306/shopby_db?serverVersion=8.4.0"
+    DATABASE_URL="mysql://root:password@127.0.0.1:3306/db?serverVersion=8.4.0"
     ```
 4.  **Ejecutar Migraciones:**
     ```bash
@@ -86,7 +86,7 @@ Por favor, consulte la página dedicada :d oc:'Web-Token feature <10-web-token>'
 
 $ php bin/console lexik:jwt:generate-keypair
 
-Tus claves caerán en y (a menos que hayas configurado una ruta diferente).config/jwt/private.pemconfig/jwt/public.pem
+Tus claves caerán en y (a menos que hayas configurado una ruta diferente) config/jwt/
 Configura la ruta de las claves SSL y la frase de contraseña en el archivo .env.
 
 
@@ -95,7 +95,6 @@ Accede a la tabla **`generales_app`** en tu cliente SQL para configurar:
 * Endpoints de Servientrega y Delivereo.
 * API Key de HubSpot.
 * Configuración del modelo Ollama y credenciales SMTP.
-
 
 ## Swager Acces 
 url: localhost/doc
