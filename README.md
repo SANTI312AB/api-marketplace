@@ -102,4 +102,12 @@ user: swagger
 password: abc1234
 
 ## Nota: 
-Asegurarse de que los trigers y enventos estan en la base de dato para un correcto funcionamiento, si no ejecutarlos. Se encuentra en la carpeta:  /script
+- Asegurarse de que los trigers y enventos estan en la base de dato para un correcto funcionamiento, si no ejecutarlos. Se encuentra en la carpeta:  /script
+
+🌐 Servidor Web
+
+Este proyecto está optimizado para correr bajo un servidor web convencional (Apache/Nginx).
+
+Arranque Automático: No es necesario ejecutar php -S o symfony server:start manualmente.
+
+Configuración: Al utilizar un entorno como WampServer o una configuración de VirtualHost, la API se mantiene activa mientras el servicio del servidor web esté iniciado.
