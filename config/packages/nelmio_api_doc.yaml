@@ -1,9 +1,9 @@
 nelmio_api_doc:
     documentation:
         info:
-            title: Shopby Marketplace
+            title: Marketplace API
             description: |
-                REST API Shopby
+                REST API Symfony para el marketplace, diseñada para ser consumida por aplicaciones frontend y clientes externos. Proporciona endpoints para gestionar productos, categorías, usuarios, pedidos y más.
 
                 **Respuestas comunes**:
 

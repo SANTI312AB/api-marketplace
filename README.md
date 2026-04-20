@@ -97,6 +97,10 @@ Accede a la tabla **`generales_app`** en tu cliente SQL para configurar:
 * Configuración del modelo Ollama y credenciales SMTP.
 
 
+## Swager Acces 
+url: localhost/doc
+user: swagger
+password: abc1234
 
 ## Nota: 
 Asegurarse de que los trigers y enventos estan en la base de dato para un correcto funcionamiento, si no ejecutarlos. Se encuentra en la carpeta:  /script

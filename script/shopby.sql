@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 20-04-2026 a las 02:23:58
+-- Tiempo de generación: 20-04-2026 a las 03:02:53
 -- Versión del servidor: 8.4.7
 -- Versión de PHP: 8.5.5
 
@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `shopby`
 --
+DROP DATABASE IF EXISTS `shopby`;
 CREATE DATABASE IF NOT EXISTS `shopby` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `shopby`;
 
@@ -2468,7 +2469,7 @@ CREATE TABLE IF NOT EXISTS `public_user` (
 --
 
 INSERT INTO `public_user` (`IDUSUARIO`, `USERNAME`, `PASSWORD`) VALUES
-(1, 'shopby', '$2b$13$7gShjERrJV2jj/2WnKtQJOWInjq2CX9s/POfEmizdtRmCd9whPeqK');
+(1, 'swagger', '$2y$13$n6xxC6oQIVphxklF5H.2e.c1oGbHBKVoju0O/jCe0IZHCnQoMSfUq');
 
 -- --------------------------------------------------------
 
