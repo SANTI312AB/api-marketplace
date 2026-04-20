@@ -14,7 +14,7 @@ API desarrollada con Symfony 6.4 para un ecosistema de Marketplace donde cualqui
 ## 🛠️ Requisitos Técnicos
 
 * **PHP:** 8.5 o superior.
-* **Framework:** Symfony 6.4.
+* **Framework:** Symfony 6.4 LTS
 * **Base de Datos:** MySQL 8.4 LTS.
 * **Dependencias:** Composer.
 
